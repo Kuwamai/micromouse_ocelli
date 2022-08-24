@@ -3029,7 +3029,7 @@
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 47a78027-6ad8-4b07-b240-ab90bc5135e1)
   )
-  (wire (pts (xy 325.12 228.6) (xy 332.74 228.6))
+  (wire (pts (xy 325.12 228.6) (xy 340.36 228.6))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 4862e489-8dc8-42bc-bf80-053ca88de310)
   )
@@ -8711,21 +8711,6 @@
     (pin "2" (uuid 3c5606fb-409e-420d-a683-531be1d91de1))
   )
 
-  (symbol (lib_id "Device:R") (at 336.55 228.6 270) (unit 1)
-    (in_bom yes) (on_board yes)
-    (uuid b226f003-8b71-4a77-bdb3-5b25ab985d18)
-    (property "Reference" "R40" (id 0) (at 336.55 234.95 90))
-    (property "Value" "47k" (id 1) (at 336.55 232.41 90))
-    (property "Footprint" "" (id 2) (at 336.55 226.822 90)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "~" (id 3) (at 336.55 228.6 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 6bffedc3-24fd-4a67-ba6f-978c28cd86e0))
-    (pin "2" (uuid ab0da1d4-b364-4f4b-bce2-f0705aadb980))
-  )
-
   (symbol (lib_id "power:GND") (at 30.48 114.3 0) (unit 1)
     (in_bom yes) (on_board yes) (fields_autoplaced)
     (uuid b5282f18-23b9-4b62-96dc-181f43eaa436)
@@ -10051,9 +10036,6 @@
     )
     (path "/a6758648-632b-446f-b1dc-a472cb7999da"
       (reference "R39") (unit 1) (value "1k") (footprint "")
-    )
-    (path "/b226f003-8b71-4a77-bdb3-5b25ab985d18"
-      (reference "R40") (unit 1) (value "47k") (footprint "")
     )
     (path "/c4a6760a-1f42-4d07-8bee-e6a7174a97d8"
       (reference "R41") (unit 1) (value "1k") (footprint "")
