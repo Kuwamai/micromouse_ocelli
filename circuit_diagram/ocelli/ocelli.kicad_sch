@@ -7389,7 +7389,7 @@
   (symbol (lib_id "Device:C") (at 231.14 106.68 0) (unit 1)
     (in_bom yes) (on_board yes)
     (uuid 5a2c25d3-64cd-481c-9a96-4ba63426ba17)
-    (property "Reference" "C?" (id 0) (at 232.41 104.14 0)
+    (property "Reference" "C31" (id 0) (at 232.41 104.14 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Value" "0.1u" (id 1) (at 232.41 109.22 0)
@@ -9871,7 +9871,7 @@
       (reference "C30") (unit 1) (value "0.1u") (footprint "")
     )
     (path "/5a2c25d3-64cd-481c-9a96-4ba63426ba17"
-      (reference "C?") (unit 1) (value "0.1u") (footprint "")
+      (reference "C31") (unit 1) (value "0.1u") (footprint "")
     )
     (path "/04070e3e-dcba-49f1-9a5a-1fd9f7e2c5be"
       (reference "D1") (unit 1) (value "OS5RKA5111A") (footprint "")
