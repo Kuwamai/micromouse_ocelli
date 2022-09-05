@@ -7984,7 +7984,7 @@
     (property "Reference" "C2" (id 0) (at 27.94 91.8209 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Value" "33u 6.3V 20%" (id 1) (at 24.13 96.52 0)
+    (property "Value" "33u 50V 20%" (id 1) (at 24.13 96.52 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Footprint" "" (id 2) (at 25.0952 97.79 0)
@@ -7993,7 +7993,7 @@
     (property "Datasheet" "~" (id 3) (at 24.13 93.98 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (property "url" "https://www.digikey.jp/ja/products/detail/murata-electronics/GRT32DR60J336ME01K/13904806" (id 4) (at 24.13 93.98 0)
+    (property "url" "https://akizukidenshi.com/catalog/g/gP-16749/" (id 4) (at 24.13 93.98 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (pin "1" (uuid 106d7ac5-f371-41f5-abf2-ed067361f1a0))
@@ -10036,7 +10036,7 @@
       (reference "C1") (unit 1) (value "0.01u 5%") (footprint "Capacitor_SMD:C_0603_1608Metric_Pad1.08x0.95mm_HandSolder")
     )
     (path "/6ec1fbce-5ed9-49a9-b67b-d64bef25ff62"
-      (reference "C2") (unit 1) (value "33u 6.3V 20%") (footprint "")
+      (reference "C2") (unit 1) (value "33u 50V 20%") (footprint "")
     )
     (path "/230be6a4-af26-49e4-a244-e2dbf0a97ea4"
       (reference "C3") (unit 1) (value "0.1u") (footprint "Capacitor_SMD:C_0603_1608Metric_Pad1.08x0.95mm_HandSolder")
