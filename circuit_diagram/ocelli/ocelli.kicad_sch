@@ -2519,8 +2519,8 @@
   (no_connect (at 35.56 49.53) (uuid 64c68e65-d344-44e1-9031-a980d65142e8))
   (no_connect (at 269.24 162.56) (uuid 660c8e0a-6883-4146-8933-2d161a8ca4df))
   (no_connect (at 269.24 144.78) (uuid 9ea4a769-2309-4705-b78d-6a6a77ac3097))
-  (no_connect (at 269.24 147.32) (uuid 9ea4a769-2309-4705-b78d-6a6a77ac3097))
-  (no_connect (at 269.24 149.86) (uuid 9ea4a769-2309-4705-b78d-6a6a77ac3097))
+  (no_connect (at 269.24 147.32) (uuid 9ea4a769-2309-4705-b78d-6a6a77ac3098))
+  (no_connect (at 269.24 149.86) (uuid 9ea4a769-2309-4705-b78d-6a6a77ac3099))
   (no_connect (at 173.99 243.84) (uuid fe4a5f1b-2646-4c6f-b545-6c03ccac2d00))
   (no_connect (at 173.99 213.36) (uuid fe4a5f1b-2646-4c6f-b545-6c03ccac2d01))
 
@@ -6469,7 +6469,7 @@
     (uuid 071c0607-01c4-409b-a94e-86fba83646e8)
     (property "Reference" "U4" (id 0) (at 186.69 215.6712 0))
     (property "Value" "ICM-20649" (id 1) (at 186.69 218.2112 0))
-    (property "Footprint" "Package_DFN_QFN:HVQFN-24-1EP_4x4mm_P0.5mm_EP2.1x2.1mm" (id 2) (at 167.64 228.6 0)
+    (property "Footprint" "Package_DFN_QFN:QFN-24-1EP_3x3mm_P0.4mm_EP1.75x1.6mm" (id 2) (at 167.64 228.6 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "" (id 3) (at 167.64 228.6 0)
@@ -10349,7 +10349,7 @@
       (reference "U3") (unit 1) (value "AS5055A") (footprint "Package_DFN_QFN:QFN-16-1EP_4x4mm_P0.65mm_EP2.7x2.7mm_PullBack")
     )
     (path "/071c0607-01c4-409b-a94e-86fba83646e8"
-      (reference "U4") (unit 1) (value "ICM-20649") (footprint "Package_DFN_QFN:HVQFN-24-1EP_4x4mm_P0.5mm_EP2.1x2.1mm")
+      (reference "U4") (unit 1) (value "ICM-20649") (footprint "Package_DFN_QFN:QFN-24-1EP_3x3mm_P0.4mm_EP1.75x1.6mm")
     )
     (path "/6262fdac-0b24-4b37-921e-3759af0201d4"
       (reference "U5") (unit 1) (value "STM32F405RGTx") (footprint "Package_QFP:LQFP-64_10x10mm_P0.5mm")
