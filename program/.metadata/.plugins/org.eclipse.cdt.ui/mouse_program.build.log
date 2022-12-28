@@ -1,0 +1,10 @@
+15:43:22 **** Incremental Build of configuration Debug for project mouse_program ****
+make -j8 all 
+arm-none-eabi-size   mouse_program.elf 
+   text	   data	    bss	    dec	    hex	filename
+  14352	     20	   2100	  16472	   4058	mouse_program.elf
+Finished building: default.size.stdout
+ 
+
+15:43:23 Build Finished. 0 errors, 0 warnings. (took 274ms)
+
