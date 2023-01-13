@@ -4160,3 +4160,9 @@ Command-line arguments:  -os linux -ws gtk -arch x86_64
 
 !ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2023-01-12 11:20:18.080
 !MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2023-01-12 13:22:41.210
+!MESSAGE Indexed 'test' (19 sources, 81 headers) in 2.08 sec: 4,291 declarations; 17,450 references; 0 unresolved inclusions; 1 syntax errors; 2 unresolved names (0.0092%)
+
+!ENTRY org.eclipse.ui 4 4 2023-01-12 13:29:01.399
+!MESSAGE Plug-in 'com.st.stm32cube.ide.mcu.debug.dsf.oss' contributed an invalid Menu Extension (Path: 'org.eclipse.ui.run' is invalid): com.st.stm32cube.ide.mcu.debug.dsf.oss.ui.action.TerminateAndRelaunch
