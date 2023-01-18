@@ -109,7 +109,27 @@ int main(void)
   MX_USART2_UART_Init();
   MX_SPI3_Init();
   /* USER CODE BEGIN 2 */
+  uint8_t address = 0x00;
+  uint8_t data = 0x00;
+  uint8_t data_h = 0x00;
+  uint8_t data_l = 0x00;
+  float gyro_z;
+  float gyro_z_ang_vel;
 
+  address = 0x06 & 0b01111111;
+  data = 0x01;
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_RESET);
+  HAL_SPI_Transmit(&hspi3, &address, 1, 100);
+  HAL_SPI_Transmit(&hspi3, &data, 1, 100);
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_SET);
+  HAL_Delay(50);
+
+  address = 0x00 | 0b10000000;
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_RESET);
+  HAL_SPI_Transmit(&hspi3, &address, 1, 100);
+  HAL_SPI_Receive(&hspi3, &data, 1, 100);
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_SET);
+  HAL_Delay(50);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -119,31 +139,31 @@ int main(void)
     HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_6);
     HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_7);
 
-    uint8_t address = 0x00;
-    uint8_t data = 0x00;
-
-    address = 0x06 & 0b01111111;
-    data = 0x01;
+    address = 0x37 | 0b10000000;
     HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_RESET);
     HAL_SPI_Transmit(&hspi3, &address, 1, 100);
-    HAL_SPI_Transmit(&hspi3, &data, 1, 100);
+    HAL_SPI_Receive(&hspi3, &data_h, 1, 100);
     HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_SET);
     HAL_Delay(50);
 
-    address = 0x00 | 0b10000000;
+    address = 0x38 | 0b10000000;
     HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_RESET);
     HAL_SPI_Transmit(&hspi3, &address, 1, 100);
-    HAL_SPI_Receive(&hspi3, &data, 1, 100);
+    HAL_SPI_Receive(&hspi3, &data_l, 1, 100);
     HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_SET);
     HAL_Delay(50);
 
+    gyro_z = ((int16_t)((uint16_t)data_h<<8)) | ((int16_t)((uint16_t)data_l&0x00ff));
+    gyro_z_ang_vel = (float)gyro_z / 65.5;
+
+    /*
     for(int i = 0; i < 5; i++)
     {
       HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_8);
       HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_9);
       HAL_Delay(200);
     }
-    /*
+
     HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_10);
     __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 250);
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
