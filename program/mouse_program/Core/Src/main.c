@@ -121,15 +121,17 @@ int main(void)
   {
     HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_6);
     HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_7);
-
-    address[0] = 0xFF;
-    address[1] = 0xFF;
-    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_RESET);
-    HAL_SPI_Transmit(&hspi2, address, 2, 100);
-    HAL_SPI_Receive(&hspi2, data, 2, 100);
-    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_SET);
-    HAL_Delay(50);
-    encoder = ((((int16_t)data[0]) & 0b00001111) << 8 ) | (((int16_t)data[1]) & 0b11111111);
+    for(int i=0; i < 10; i++)
+    {
+        address[0] = 0xFF;
+        address[1] = 0xFF;
+        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+        HAL_SPI_Transmit(&hspi2, address, 2, 100);
+        HAL_SPI_Receive(&hspi2, data, 2, 100);
+        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+        HAL_Delay(50);
+        encoder = ((((int16_t)data[0]) & 0b00001111) << 8 ) | (((int16_t)data[1]) & 0b11111111);
+    }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
