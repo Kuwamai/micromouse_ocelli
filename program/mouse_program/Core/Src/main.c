@@ -70,7 +70,9 @@ static void MX_SPI3_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+int16_t encoder_l;
+int16_t encoder_r;
+uint16_t data;
 /* USER CODE END 0 */
 
 /**
@@ -109,9 +111,6 @@ int main(void)
   MX_USART2_UART_Init();
   MX_SPI3_Init();
   /* USER CODE BEGIN 2 */
-  uint8_t address[2] = {0x00, 0x00};
-  uint8_t data[2] = {0x00, 0x00};
-  int16_t encoder;
 
   /* USER CODE END 2 */
 
@@ -121,17 +120,19 @@ int main(void)
   {
     HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_6);
     HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_7);
-    for(int i=0; i < 10; i++)
-    {
-        address[0] = 0xFF;
-        address[1] = 0xFF;
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-        HAL_SPI_Transmit(&hspi2, address, 2, 100);
-        HAL_SPI_Receive(&hspi2, data, 2, 100);
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
-        HAL_Delay(50);
-        encoder = ((((int16_t)data[0]) & 0b00001111) << 8 ) | (((int16_t)data[1]) & 0b11111111);
-    }
+    uint16_t address = 0xFFFF;
+
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_RESET);
+    HAL_SPI_TransmitReceive(&hspi2, (uint8_t*)&address, (uint8_t*)&data, 1, 100);
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_SET);
+    HAL_Delay(50);
+    encoder_l = (data & 0b0011111111111100) >> 2;
+
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+    HAL_SPI_TransmitReceive(&hspi2, (uint8_t*)&address, (uint8_t*)&data, 1, 100);
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+    HAL_Delay(50);
+    encoder_r = (data & 0b0011111111111100) >> 2;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
