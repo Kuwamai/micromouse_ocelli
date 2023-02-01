@@ -70,7 +70,9 @@ static void MX_SPI3_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+int16_t encoder_l;
+int16_t encoder_r;
+uint16_t data;
 /* USER CODE END 0 */
 
 /**
@@ -109,27 +111,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_SPI3_Init();
   /* USER CODE BEGIN 2 */
-  uint8_t address = 0x00;
-  uint8_t data = 0x00;
-  uint8_t data_h = 0x00;
-  uint8_t data_l = 0x00;
-  float gyro_z;
-  float gyro_z_ang_vel;
 
-  address = 0x06 & 0b01111111;
-  data = 0x01;
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_RESET);
-  HAL_SPI_Transmit(&hspi3, &address, 1, 100);
-  HAL_SPI_Transmit(&hspi3, &data, 1, 100);
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_SET);
-  HAL_Delay(50);
-
-  address = 0x00 | 0b10000000;
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_RESET);
-  HAL_SPI_Transmit(&hspi3, &address, 1, 100);
-  HAL_SPI_Receive(&hspi3, &data, 1, 100);
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_SET);
-  HAL_Delay(50);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -138,43 +120,19 @@ int main(void)
   {
     HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_6);
     HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_7);
+    uint16_t address = 0xFFFF;
 
-    address = 0x37 | 0b10000000;
-    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_RESET);
-    HAL_SPI_Transmit(&hspi3, &address, 1, 100);
-    HAL_SPI_Receive(&hspi3, &data_h, 1, 100);
-    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_RESET);
+    HAL_SPI_TransmitReceive(&hspi2, (uint8_t*)&address, (uint8_t*)&data, 1, 100);
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_SET);
     HAL_Delay(50);
+    encoder_l = (data & 0b0011111111111100) >> 2;
 
-    address = 0x38 | 0b10000000;
-    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_RESET);
-    HAL_SPI_Transmit(&hspi3, &address, 1, 100);
-    HAL_SPI_Receive(&hspi3, &data_l, 1, 100);
-    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+    HAL_SPI_TransmitReceive(&hspi2, (uint8_t*)&address, (uint8_t*)&data, 1, 100);
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
     HAL_Delay(50);
-
-    gyro_z = ((int16_t)((uint16_t)data_h<<8)) | ((int16_t)((uint16_t)data_l&0x00ff));
-    gyro_z_ang_vel = (float)gyro_z / 65.5;
-
-    /*
-    for(int i = 0; i < 5; i++)
-    {
-      HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_8);
-      HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_9);
-      HAL_Delay(200);
-    }
-
-    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_10);
-    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 250);
-    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
-    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_8);
-    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 250);
-    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
-    HAL_Delay(1000);
-    HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_4);
-    HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_2);
-    HAL_Delay(1000);
-    */
+    encoder_r = (data & 0b0011111111111100) >> 2;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -299,11 +257,11 @@ static void MX_SPI2_Init(void)
   hspi2.Instance = SPI2;
   hspi2.Init.Mode = SPI_MODE_MASTER;
   hspi2.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
+  hspi2.Init.DataSize = SPI_DATASIZE_16BIT;
   hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
-  hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
+  hspi2.Init.CLKPhase = SPI_PHASE_2EDGE;
   hspi2.Init.NSS = SPI_NSS_SOFT;
-  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
   hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -588,14 +546,16 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, SPI2_CS1_Pin|SPI2_CS0_Pin|GPIO_PIN_6|GPIO_PIN_7
-                          |GPIO_PIN_8|GPIO_PIN_9, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, SPI2_CS1_Pin|SPI2_CS0_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, RIGHT_SIDE_IR_Pin|RIGHT_FRONT_IR_Pin|GPIO_PIN_8|GPIO_PIN_10, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, LEFT_FRONT_IR_Pin|LEFT_SIDE_IR_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6|GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_SET);
