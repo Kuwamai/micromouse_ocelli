@@ -22,6 +22,8 @@
 #include "stm32f4xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <global.h>
+#include <delay_us.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -56,8 +58,9 @@
 
 /* External variables --------------------------------------------------------*/
 extern DMA_HandleTypeDef hdma_adc1;
+extern TIM_HandleTypeDef htim4;
 /* USER CODE BEGIN EV */
-
+extern TIM_HandleTypeDef htim2;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -197,6 +200,63 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32f4xx.s).                    */
 /******************************************************************************/
+
+/**
+  * @brief This function handles TIM4 global interrupt.
+  */
+void TIM4_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM4_IRQn 0 */
+  // センサ値の取得
+  uint16_t pins[4] = {GPIO_PIN_11, GPIO_PIN_12, GPIO_PIN_0, GPIO_PIN_1};
+  GPIO_TypeDef* ports[4] = {GPIOB, GPIOB, GPIOA, GPIOA};
+  const float adjust_volt = 1.011;
+
+  switch(sensor_count) {
+    case 0:
+      HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
+      delay_us(&htim2, 15);
+      a[sensor_count] = (float)adc_values[sensor_count] * 3.3 / 4096.0;
+      HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
+      sensor_count++;
+      break;
+    case 1:
+      HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
+      delay_us(&htim2, 15);
+      a[sensor_count] = (float)adc_values[sensor_count] * 3.3 / 4096.0;
+      HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
+      sensor_count++;
+      break;
+    case 2:
+      HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
+      delay_us(&htim2, 15);
+      a[sensor_count] = (float)adc_values[sensor_count] * 3.3 / 4096.0;
+      HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
+      sensor_count++;
+      break;
+    case 3:
+      HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
+      delay_us(&htim2, 15);
+      a[sensor_count] = (float)adc_values[sensor_count] * 3.3 / 4096.0;
+      HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
+      sensor_count++;
+      break;
+    case 4:
+      a[sensor_count] = (float)adc_values[sensor_count] * 3.3 / 4096.0;
+      a[sensor_count] = a[sensor_count] / 2.0 * 3.0 * adjust_volt;
+      sensor_count++;
+      break;
+    default:
+      sensor_count = 0;
+      break;
+  }
+
+  /* USER CODE END TIM4_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim4);
+  /* USER CODE BEGIN TIM4_IRQn 1 */
+
+  /* USER CODE END TIM4_IRQn 1 */
+}
 
 /**
   * @brief This function handles DMA2 stream0 global interrupt.
