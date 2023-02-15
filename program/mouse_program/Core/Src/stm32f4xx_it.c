@@ -285,28 +285,26 @@ void TIM5_IRQHandler(void)
   encoder_l_diff_raw = encoder_l_past - encoder_l;
   if (encoder_l_diff_raw < -2000) {
     encoder_l_diff = encoder_l_diff_raw + 4095;
-  }
-  else if (encoder_l_diff_raw > 2000) {
+  } else if (encoder_l_diff_raw > 2000) {
     encoder_l_diff = encoder_l_diff_raw - 4095;
-  }
-  else {
+  } else {
     encoder_l_diff = encoder_l_diff_raw;
   }
 
   encoder_r_diff_raw = encoder_r_past - encoder_r;
   if (encoder_r_diff_raw < -2000) {
     encoder_r_diff = encoder_r_diff_raw + 4095;
-  }
-  else if (encoder_r_diff_raw > 2000) {
+  } else if (encoder_r_diff_raw > 2000) {
     encoder_r_diff = encoder_r_diff_raw - 4095;
-  }
-  else {
+  } else {
     encoder_r_diff = encoder_r_diff_raw;
   }
 
   encoder_l_past = encoder_l;
   encoder_r_past = encoder_r;
 
+  velocity_l = -((float)encoder_l_diff / 4095.0) * TIRE_DIAMETER * M_PI * 1000.0;
+  velocity_r =  ((float)encoder_r_diff / 4095.0) * TIRE_DIAMETER * M_PI * 1000.0;
   /* USER CODE END TIM5_IRQn 0 */
   HAL_TIM_IRQHandler(&htim5);
   /* USER CODE BEGIN TIM5_IRQn 1 */
