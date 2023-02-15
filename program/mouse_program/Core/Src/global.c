@@ -7,5 +7,5 @@
 #include <global.h>
 
 int sensor_count = 0;
-uint16_t adc_values[5];
-float a[5];
+uint16_t adc_raw[5];
+float adc_voltage[5];

@@ -217,34 +217,34 @@ void TIM4_IRQHandler(void)
     case 0:
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
       delay_us(&htim2, 15);
-      a[sensor_count] = (float)adc_values[sensor_count] * 3.3 / 4096.0;
+      adc_voltage[sensor_count] = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
       sensor_count++;
       break;
     case 1:
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
       delay_us(&htim2, 15);
-      a[sensor_count] = (float)adc_values[sensor_count] * 3.3 / 4096.0;
+      adc_voltage[sensor_count] = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
       sensor_count++;
       break;
     case 2:
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
       delay_us(&htim2, 15);
-      a[sensor_count] = (float)adc_values[sensor_count] * 3.3 / 4096.0;
+      adc_voltage[sensor_count] = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
       sensor_count++;
       break;
     case 3:
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
       delay_us(&htim2, 15);
-      a[sensor_count] = (float)adc_values[sensor_count] * 3.3 / 4096.0;
+      adc_voltage[sensor_count] = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
       sensor_count++;
       break;
     case 4:
-      a[sensor_count] = (float)adc_values[sensor_count] * 3.3 / 4096.0;
-      a[sensor_count] = a[sensor_count] / 2.0 * 3.0 * adjust_volt;
+      adc_voltage[sensor_count] = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
+      adc_voltage[sensor_count] = adc_voltage[sensor_count] / 2.0 * 3.0 * adjust_volt;
       sensor_count++;
       break;
     default:

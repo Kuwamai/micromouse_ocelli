@@ -119,7 +119,7 @@ int main(void)
   MX_TIM4_Init();
   MX_TIM5_Init();
   /* USER CODE BEGIN 2 */
-  HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_values, 5);
+  HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_raw, 5);
   HAL_TIM_Base_Start(&htim2);
   HAL_TIM_Base_Start_IT(&htim4);
   /* USER CODE END 2 */

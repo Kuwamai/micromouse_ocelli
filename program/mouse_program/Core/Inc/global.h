@@ -11,6 +11,6 @@
 #include <stdint.h>
 
 extern int sensor_count;
-extern uint16_t adc_values[5];
-extern float a[5];
+extern uint16_t adc_raw[5];
+extern float adc_voltage[5];
 #endif /* GLOBAL_H_ */
