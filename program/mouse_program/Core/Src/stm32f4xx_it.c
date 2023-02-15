@@ -269,6 +269,8 @@ void TIM5_IRQHandler(void)
   // 速度制御
   uint16_t encoder_address = 0xFFFF;
   uint16_t spi_data;
+  int16_t encoder_l_diff_raw = 0;
+  int16_t encoder_r_diff_raw = 0;
 
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_RESET);
   HAL_SPI_TransmitReceive(&hspi2, (uint8_t*)&encoder_address, (uint8_t*)&spi_data, 1, 1);
@@ -279,6 +281,31 @@ void TIM5_IRQHandler(void)
   HAL_SPI_TransmitReceive(&hspi2, (uint8_t*)&encoder_address, (uint8_t*)&spi_data, 1, 1);
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
   encoder_r = (spi_data & 0b0011111111111100) >> 2;
+
+  encoder_l_diff_raw = encoder_l_past - encoder_l;
+  if (encoder_l_diff_raw < -2000) {
+    encoder_l_diff = encoder_l_diff_raw + 4095;
+  }
+  else if (encoder_l_diff_raw > 2000) {
+    encoder_l_diff = encoder_l_diff_raw - 4095;
+  }
+  else {
+    encoder_l_diff = encoder_l_diff_raw;
+  }
+
+  encoder_r_diff_raw = encoder_r_past - encoder_r;
+  if (encoder_r_diff_raw < -2000) {
+    encoder_r_diff = encoder_r_diff_raw + 4095;
+  }
+  else if (encoder_r_diff_raw > 2000) {
+    encoder_r_diff = encoder_r_diff_raw - 4095;
+  }
+  else {
+    encoder_r_diff = encoder_r_diff_raw;
+  }
+
+  encoder_l_past = encoder_l;
+  encoder_r_past = encoder_r;
 
   /* USER CODE END TIM5_IRQn 0 */
   HAL_TIM_IRQHandler(&htim5);
