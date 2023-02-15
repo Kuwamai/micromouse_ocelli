@@ -9,3 +9,5 @@
 int sensor_count = 0;
 uint16_t adc_raw[5];
 float adc_voltage[5];
+int16_t encoder_l;
+int16_t encoder_r;

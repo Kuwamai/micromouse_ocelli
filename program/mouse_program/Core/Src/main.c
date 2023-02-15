@@ -122,6 +122,7 @@ int main(void)
   HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_raw, 5);
   HAL_TIM_Base_Start(&htim2);
   HAL_TIM_Base_Start_IT(&htim4);
+  HAL_TIM_Base_Start_IT(&htim5);
   /* USER CODE END 2 */
 
   /* Infinite loop */

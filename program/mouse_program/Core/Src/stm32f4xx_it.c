@@ -62,6 +62,7 @@ extern TIM_HandleTypeDef htim4;
 extern TIM_HandleTypeDef htim5;
 /* USER CODE BEGIN EV */
 extern TIM_HandleTypeDef htim2;
+extern SPI_HandleTypeDef hspi2;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -265,6 +266,19 @@ void TIM4_IRQHandler(void)
 void TIM5_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM5_IRQn 0 */
+  // 速度制御
+  uint16_t encoder_address = 0xFFFF;
+  uint16_t spi_data;
+
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_RESET);
+  HAL_SPI_TransmitReceive(&hspi2, (uint8_t*)&encoder_address, (uint8_t*)&spi_data, 1, 1);
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_SET);
+  encoder_l = (spi_data & 0b0011111111111100) >> 2;
+
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+  HAL_SPI_TransmitReceive(&hspi2, (uint8_t*)&encoder_address, (uint8_t*)&spi_data, 1, 1);
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+  encoder_r = (spi_data & 0b0011111111111100) >> 2;
 
   /* USER CODE END TIM5_IRQn 0 */
   HAL_TIM_IRQHandler(&htim5);
