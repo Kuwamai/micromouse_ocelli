@@ -11,6 +11,7 @@ const float M_PI = 3.141592;
 const float VELOCITY_KP = 0.0;
 const float VELOCITY_KI = 0.0;
 const float VELOCITY_KD = 0.0;
+const int DUTY_LIMIT = 200;
 
 int sensor_count = 0;
 uint16_t adc_raw[5] = {0};

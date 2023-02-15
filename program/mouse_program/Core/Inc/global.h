@@ -15,7 +15,7 @@ extern const float M_PI;
 extern const float VELOCITY_KP;
 extern const float VELOCITY_KI;
 extern const float VELOCITY_KD;
-
+extern const int DUTY_LIMIT = 200;
 
 extern int sensor_count;
 extern uint16_t adc_raw[5];
