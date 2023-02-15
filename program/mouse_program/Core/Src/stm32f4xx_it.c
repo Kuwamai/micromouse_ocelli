@@ -305,6 +305,22 @@ void TIM5_IRQHandler(void)
 
   velocity_l = -((float)encoder_l_diff / 4095.0) * TIRE_DIAMETER * M_PI * 1000.0;
   velocity_r =  ((float)encoder_r_diff / 4095.0) * TIRE_DIAMETER * M_PI * 1000.0;
+
+  float velocity_l_err = velocity_l_ref - velocity_l;
+  velocity_l_err_int = velocity_l_err_int + velocity_l_err;
+  if (velocity_l_err_int >  100) velocity_l_err_int =  100;
+  if (velocity_l_err_int < -100) velocity_l_err_int = -100;
+  float velocity_l_err_diff = velocity_l_err_past - velocity_l_err;
+  velocity_l_err_past = velocity_l_err;
+  float duty_l = velocity_l_err * VELOCITY_KP + velocity_l_err_int * VELOCITY_KI + velocity_l_err_diff * VELOCITY_KD;
+
+  float velocity_r_err = velocity_r_ref - velocity_r;
+  velocity_r_err_int = velocity_r_err_int + velocity_r_err;
+  if (velocity_r_err_int >  100) velocity_r_err_int =  100;
+  if (velocity_r_err_int < -100) velocity_r_err_int = -100;
+  float velocity_r_err_diff = velocity_r_err_past - velocity_r_err;
+  velocity_r_err_past = velocity_r_err;
+  float duty_r = velocity_r_err * VELOCITY_KP + velocity_r_err_int * VELOCITY_KI + velocity_r_err_diff * VELOCITY_KD;
   /* USER CODE END TIM5_IRQn 0 */
   HAL_TIM_IRQHandler(&htim5);
   /* USER CODE BEGIN TIM5_IRQn 1 */

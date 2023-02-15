@@ -12,6 +12,10 @@
 
 extern const float TIRE_DIAMETER;
 extern const float M_PI;
+extern const float VELOCITY_KP;
+extern const float VELOCITY_KI;
+extern const float VELOCITY_KD;
+
 
 extern int sensor_count;
 extern uint16_t adc_raw[5];
@@ -25,5 +29,10 @@ extern int16_t encoder_l_diff;
 extern int16_t encoder_r_diff;
 extern float velocity_l;
 extern float velocity_r;
-extern float velocity_ref;
+extern float velocity_l_ref;
+extern float velocity_r_ref;
+extern float velocity_l_err_past;
+extern float velocity_r_err_past;
+extern float velocity_l_err_int;
+extern float velocity_r_err_int;
 #endif /* GLOBAL_H_ */
