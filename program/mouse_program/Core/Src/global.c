@@ -31,6 +31,7 @@ float velocity_l_err_past = 0;
 float velocity_r_err_past = 0;
 float velocity_l_err_int = 0;
 float velocity_r_err_int = 0;
+float length_run = 0;
 
 int duty_l = 0;
 int duty_r = 0;

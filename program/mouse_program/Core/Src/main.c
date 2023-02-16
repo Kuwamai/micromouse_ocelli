@@ -148,6 +148,7 @@ int main(void)
       velocity_r_ref = 0.0;
       HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET);
       HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
+      length_run = 0;
       HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_2);
       HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_4);
     }

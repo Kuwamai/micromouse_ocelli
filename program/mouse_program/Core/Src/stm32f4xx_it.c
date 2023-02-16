@@ -307,6 +307,8 @@ void TIM5_IRQHandler(void)
   velocity_l = -((float)encoder_l_diff / 4095.0) * TIRE_DIAMETER * M_PI * 1000.0;
   velocity_r =  ((float)encoder_r_diff / 4095.0) * TIRE_DIAMETER * M_PI * 1000.0;
 
+  length_run += (velocity_l + velocity_r) / 2.0 / 1000.0;
+
   float velocity_l_err = velocity_l_ref - velocity_l;
   velocity_l_err_int = velocity_l_err_int + velocity_l_err;
   if (velocity_l_err_int >  100) velocity_l_err_int =  100;
