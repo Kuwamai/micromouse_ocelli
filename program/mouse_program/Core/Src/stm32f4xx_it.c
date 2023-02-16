@@ -313,7 +313,7 @@ void TIM5_IRQHandler(void)
   if (velocity_l_err_int < -100) velocity_l_err_int = -100;
   float velocity_l_err_diff = velocity_l_err_past - velocity_l_err;
   velocity_l_err_past = velocity_l_err;
-  int duty_l = (int)(velocity_l_err * VELOCITY_KP + velocity_l_err_int * VELOCITY_KI + velocity_l_err_diff * VELOCITY_KD);
+  duty_l = (int)(velocity_l_err * VELOCITY_KP + velocity_l_err_int * VELOCITY_KI + velocity_l_err_diff * VELOCITY_KD);
 
   float velocity_r_err = velocity_r_ref - velocity_r;
   velocity_r_err_int = velocity_r_err_int + velocity_r_err;
@@ -321,16 +321,16 @@ void TIM5_IRQHandler(void)
   if (velocity_r_err_int < -100) velocity_r_err_int = -100;
   float velocity_r_err_diff = velocity_r_err_past - velocity_r_err;
   velocity_r_err_past = velocity_r_err;
-  int duty_r = (int)(velocity_r_err * VELOCITY_KP + velocity_r_err_int * VELOCITY_KI + velocity_r_err_diff * VELOCITY_KD);
+  duty_r = (int)(velocity_r_err * VELOCITY_KP + velocity_r_err_int * VELOCITY_KI + velocity_r_err_diff * VELOCITY_KD);
 
   if (duty_l >= 0) {
     if (duty_l > DUTY_LIMIT) duty_l = DUTY_LIMIT;
-    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
     __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, duty_l);
   } else {
     duty_l = -duty_l;
     if (duty_l > DUTY_LIMIT) duty_l = DUTY_LIMIT;
-    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_SET);
     __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, duty_l);
   }
 
@@ -345,12 +345,6 @@ void TIM5_IRQHandler(void)
     __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, duty_r);
   }
 
-  /*
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
-  HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_4);
-  HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_2);
-  */
   /* USER CODE END TIM5_IRQn 0 */
   HAL_TIM_IRQHandler(&htim5);
   /* USER CODE BEGIN TIM5_IRQn 1 */

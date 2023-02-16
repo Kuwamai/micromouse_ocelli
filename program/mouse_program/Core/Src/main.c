@@ -131,6 +131,26 @@ int main(void)
   {
     HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_6);
     HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_7);
+    if (HAL_GPIO_ReadPin(SW0_GPIO_Port, SW0_Pin) == 0) {
+      velocity_l_ref = 0.3;
+      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET);
+      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_RESET);
+      HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+    }
+    if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
+      velocity_r_ref = 0.3;
+      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
+      HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
+    }
+    if (HAL_GPIO_ReadPin(SW2_GPIO_Port, SW2_Pin) == 0) {
+      velocity_l_ref = 0.0;
+      velocity_r_ref = 0.0;
+      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET);
+      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
+      HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_2);
+      HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_4);
+    }
     HAL_Delay(100);
     /* USER CODE END WHILE */
 

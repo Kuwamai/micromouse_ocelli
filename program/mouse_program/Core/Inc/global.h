@@ -35,4 +35,7 @@ extern float velocity_l_err_past;
 extern float velocity_r_err_past;
 extern float velocity_l_err_int;
 extern float velocity_r_err_int;
+
+extern int duty_l;
+extern int duty_r;
 #endif /* GLOBAL_H_ */
