@@ -59,8 +59,11 @@
 /* External variables --------------------------------------------------------*/
 extern DMA_HandleTypeDef hdma_adc1;
 extern TIM_HandleTypeDef htim4;
+extern TIM_HandleTypeDef htim5;
 /* USER CODE BEGIN EV */
+extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim2;
+extern SPI_HandleTypeDef hspi2;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -216,34 +219,34 @@ void TIM4_IRQHandler(void)
     case 0:
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
       delay_us(&htim2, 15);
-      a[sensor_count] = (float)adc_values[sensor_count] * 3.3 / 4096.0;
+      adc_voltage[sensor_count] = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
       sensor_count++;
       break;
     case 1:
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
       delay_us(&htim2, 15);
-      a[sensor_count] = (float)adc_values[sensor_count] * 3.3 / 4096.0;
+      adc_voltage[sensor_count] = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
       sensor_count++;
       break;
     case 2:
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
       delay_us(&htim2, 15);
-      a[sensor_count] = (float)adc_values[sensor_count] * 3.3 / 4096.0;
+      adc_voltage[sensor_count] = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
       sensor_count++;
       break;
     case 3:
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
       delay_us(&htim2, 15);
-      a[sensor_count] = (float)adc_values[sensor_count] * 3.3 / 4096.0;
+      adc_voltage[sensor_count] = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
       sensor_count++;
       break;
     case 4:
-      a[sensor_count] = (float)adc_values[sensor_count] * 3.3 / 4096.0;
-      a[sensor_count] = a[sensor_count] / 2.0 * 3.0 * adjust_volt;
+      adc_voltage[sensor_count] = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
+      adc_voltage[sensor_count] = adc_voltage[sensor_count] / 2.0 * 3.0 * adjust_volt;
       sensor_count++;
       break;
     default:
@@ -256,6 +259,97 @@ void TIM4_IRQHandler(void)
   /* USER CODE BEGIN TIM4_IRQn 1 */
 
   /* USER CODE END TIM4_IRQn 1 */
+}
+
+/**
+  * @brief This function handles TIM5 global interrupt.
+  */
+void TIM5_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM5_IRQn 0 */
+  // 速度制御
+  uint16_t encoder_address = 0xFFFF;
+  uint16_t spi_data;
+  int16_t encoder_l_diff_raw = 0;
+  int16_t encoder_r_diff_raw = 0;
+
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_RESET);
+  HAL_SPI_TransmitReceive(&hspi2, (uint8_t*)&encoder_address, (uint8_t*)&spi_data, 1, 1);
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_SET);
+  encoder_l = (spi_data & 0b0011111111111100) >> 2;
+
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+  HAL_SPI_TransmitReceive(&hspi2, (uint8_t*)&encoder_address, (uint8_t*)&spi_data, 1, 1);
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+  encoder_r = (spi_data & 0b0011111111111100) >> 2;
+
+  encoder_l_diff_raw = encoder_l_past - encoder_l;
+  if (encoder_l_diff_raw < -2000) {
+    encoder_l_diff = encoder_l_diff_raw + 4095;
+  } else if (encoder_l_diff_raw > 2000) {
+    encoder_l_diff = encoder_l_diff_raw - 4095;
+  } else {
+    encoder_l_diff = encoder_l_diff_raw;
+  }
+
+  encoder_r_diff_raw = encoder_r_past - encoder_r;
+  if (encoder_r_diff_raw < -2000) {
+    encoder_r_diff = encoder_r_diff_raw + 4095;
+  } else if (encoder_r_diff_raw > 2000) {
+    encoder_r_diff = encoder_r_diff_raw - 4095;
+  } else {
+    encoder_r_diff = encoder_r_diff_raw;
+  }
+
+  encoder_l_past = encoder_l;
+  encoder_r_past = encoder_r;
+
+  velocity_l = -((float)encoder_l_diff / 4095.0) * TIRE_DIAMETER * M_PI * 1000.0;
+  velocity_r =  ((float)encoder_r_diff / 4095.0) * TIRE_DIAMETER * M_PI * 1000.0;
+
+  float velocity_l_err = velocity_l_ref - velocity_l;
+  velocity_l_err_int = velocity_l_err_int + velocity_l_err;
+  if (velocity_l_err_int >  100) velocity_l_err_int =  100;
+  if (velocity_l_err_int < -100) velocity_l_err_int = -100;
+  float velocity_l_err_diff = velocity_l_err_past - velocity_l_err;
+  velocity_l_err_past = velocity_l_err;
+  duty_l = (int)(velocity_l_err * VELOCITY_KP + velocity_l_err_int * VELOCITY_KI + velocity_l_err_diff * VELOCITY_KD);
+
+  float velocity_r_err = velocity_r_ref - velocity_r;
+  velocity_r_err_int = velocity_r_err_int + velocity_r_err;
+  if (velocity_r_err_int >  100) velocity_r_err_int =  100;
+  if (velocity_r_err_int < -100) velocity_r_err_int = -100;
+  float velocity_r_err_diff = velocity_r_err_past - velocity_r_err;
+  velocity_r_err_past = velocity_r_err;
+  duty_r = (int)(velocity_r_err * VELOCITY_KP + velocity_r_err_int * VELOCITY_KI + velocity_r_err_diff * VELOCITY_KD);
+
+  if (duty_l >= 0) {
+    if (duty_l > DUTY_LIMIT) duty_l = DUTY_LIMIT;
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
+    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, duty_l);
+  } else {
+    duty_l = -duty_l;
+    if (duty_l > DUTY_LIMIT) duty_l = DUTY_LIMIT;
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_SET);
+    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, duty_l);
+  }
+
+  if (duty_r >= 0) {
+    if (duty_r > DUTY_LIMIT) duty_r = DUTY_LIMIT;
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, GPIO_PIN_SET);
+    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, duty_r);
+  } else {
+    duty_r = -duty_r;
+    if (duty_r > DUTY_LIMIT) duty_r = DUTY_LIMIT;
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, GPIO_PIN_RESET);
+    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, duty_r);
+  }
+
+  /* USER CODE END TIM5_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim5);
+  /* USER CODE BEGIN TIM5_IRQn 1 */
+
+  /* USER CODE END TIM5_IRQn 1 */
 }
 
 /**
