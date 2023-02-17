@@ -23,6 +23,7 @@
 /* USER CODE BEGIN Includes */
 #include <delay_us.h>
 #include <global.h>
+#include <run.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -133,23 +134,20 @@ int main(void)
     switch (mode) {
       case 1:
         if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
-          velocity_l_ref = 0.3;
-          HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+          HAL_Delay(1000);
+          straight(0.1, 0.3, 1.0);
         }
         break;
       case 2:
         if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
-          velocity_r_ref = 0.3;
-          HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
+          velocity_l_ref = 0.1;
+          velocity_r_ref = 0.1;
+          motor_on();
         }
         break;
       case 3:
         if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
-          velocity_l_ref = 0.0;
-          velocity_r_ref = 0.0;
-          length_run = 0;
-          HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_2);
-          HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_4);
+          motor_off();
         }
         break;
       case 4:

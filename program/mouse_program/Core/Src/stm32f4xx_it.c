@@ -267,6 +267,14 @@ void TIM4_IRQHandler(void)
 void TIM5_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM5_IRQn 0 */
+  if (run_mode == STRAIGHT_MODE) {
+    velocity_ref += accel / 1000.0;
+    if (velocity_ref > velocity_ref_max) {
+      velocity_ref = velocity_ref_max;
+    }
+    velocity_l_ref = velocity_ref;
+    velocity_r_ref = velocity_ref;
+  }
   // 速度制御
   uint16_t encoder_address = 0xFFFF;
   uint16_t spi_data;
@@ -315,7 +323,7 @@ void TIM5_IRQHandler(void)
   if (velocity_l_err_int < -100) velocity_l_err_int = -100;
   float velocity_l_err_diff = velocity_l_err_past - velocity_l_err;
   velocity_l_err_past = velocity_l_err;
-  duty_l = (int)(velocity_l_err * VELOCITY_KP + velocity_l_err_int * VELOCITY_KI + velocity_l_err_diff * VELOCITY_KD);
+  int duty_l = (int)(velocity_l_err * VELOCITY_KP + velocity_l_err_int * VELOCITY_KI + velocity_l_err_diff * VELOCITY_KD);
 
   float velocity_r_err = velocity_r_ref - velocity_r;
   velocity_r_err_int = velocity_r_err_int + velocity_r_err;
@@ -323,7 +331,7 @@ void TIM5_IRQHandler(void)
   if (velocity_r_err_int < -100) velocity_r_err_int = -100;
   float velocity_r_err_diff = velocity_r_err_past - velocity_r_err;
   velocity_r_err_past = velocity_r_err;
-  duty_r = (int)(velocity_r_err * VELOCITY_KP + velocity_r_err_int * VELOCITY_KI + velocity_r_err_diff * VELOCITY_KD);
+  int duty_r = (int)(velocity_r_err * VELOCITY_KP + velocity_r_err_int * VELOCITY_KI + velocity_r_err_diff * VELOCITY_KD);
 
   if (duty_l >= 0) {
     if (duty_l > DUTY_LIMIT) duty_l = DUTY_LIMIT;
