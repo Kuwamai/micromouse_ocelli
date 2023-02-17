@@ -11,3 +11,10 @@ void delay_us(TIM_HandleTypeDef *htim, uint16_t us) {
   while(__HAL_TIM_GET_COUNTER(htim) < us);
   return;
 }
+
+void led_control(uint8_t led_state) {
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, led_state & 0x01);
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, led_state & 0x02);
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, led_state & 0x04);
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, led_state & 0x08);
+}

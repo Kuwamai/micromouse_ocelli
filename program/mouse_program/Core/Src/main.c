@@ -123,35 +123,59 @@ int main(void)
   HAL_TIM_Base_Start(&htim2);
   HAL_TIM_Base_Start_IT(&htim4);
   HAL_TIM_Base_Start_IT(&htim5);
+  int mode = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_6);
-    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_7);
-    if (HAL_GPIO_ReadPin(SW0_GPIO_Port, SW0_Pin) == 0) {
-      velocity_l_ref = 0.3;
-      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET);
-      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_RESET);
-      HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+    switch (mode) {
+      case 1:
+        if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
+          velocity_l_ref = 0.3;
+          HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+        }
+        break;
+      case 2:
+        if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
+          velocity_r_ref = 0.3;
+          HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
+        }
+        break;
+      case 3:
+        if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
+          velocity_l_ref = 0.0;
+          velocity_r_ref = 0.0;
+          length_run = 0;
+          HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_2);
+          HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_4);
+        }
+        break;
+      case 4:
+        if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
+        }
+        break;
+      case 5:
+        if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
+        }
+        break;
     }
-    if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
-      velocity_r_ref = 0.3;
-      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_RESET);
-      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
-      HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
+    if (HAL_GPIO_ReadPin(SW0_GPIO_Port, SW0_Pin) == 0) {
+      mode++;
+      HAL_Delay(500);
     }
     if (HAL_GPIO_ReadPin(SW2_GPIO_Port, SW2_Pin) == 0) {
-      velocity_l_ref = 0.0;
-      velocity_r_ref = 0.0;
-      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET);
-      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
-      length_run = 0;
-      HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_2);
-      HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_4);
+      mode--;
+      HAL_Delay(500);
     }
+    if (mode > 15) {
+      mode = 0;
+    }
+    if (mode < 0) {
+      mode = 15;
+    }
+    led_control(mode);
     HAL_Delay(100);
     /* USER CODE END WHILE */
 
