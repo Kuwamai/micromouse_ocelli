@@ -15,7 +15,9 @@ extern const float M_PI;
 extern const float VELOCITY_KP;
 extern const float VELOCITY_KI;
 extern const float VELOCITY_KD;
+extern const float VELOCITY_MIN;
 extern const int DUTY_LIMIT;
+extern const int STRAIGHT_MODE;
 
 extern int sensor_count;
 extern uint16_t adc_raw[5];
@@ -31,11 +33,13 @@ extern float velocity_l;
 extern float velocity_r;
 extern float velocity_l_ref;
 extern float velocity_r_ref;
+extern float velocity_ref;
+extern float velocity_ref_max;
 extern float velocity_l_err_past;
 extern float velocity_r_err_past;
 extern float velocity_l_err_int;
 extern float velocity_r_err_int;
-
-extern int duty_l;
-extern int duty_r;
+extern float accel;
+extern float length_run;
+extern int run_mode;
 #endif /* GLOBAL_H_ */
