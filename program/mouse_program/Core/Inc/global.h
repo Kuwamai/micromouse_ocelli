@@ -18,6 +18,7 @@ extern const float VELOCITY_KD;
 extern const float VELOCITY_MIN;
 extern const int DUTY_LIMIT;
 extern const int STRAIGHT_MODE;
+extern const int TURN_MODE;
 
 extern int sensor_count;
 extern uint16_t adc_raw[5];
@@ -42,4 +43,6 @@ extern float velocity_r_err_int;
 extern float accel;
 extern float length_run;
 extern int run_mode;
+extern float angle_measured;
+extern float angular_velocity_offset;
 #endif /* GLOBAL_H_ */

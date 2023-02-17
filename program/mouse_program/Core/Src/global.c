@@ -6,7 +6,7 @@
  */
 #include <global.h>
 
-const float TIRE_DIAMETER = 0.013;
+const float TIRE_DIAMETER = 0.0133;
 const float M_PI = 3.141592;
 const float VELOCITY_KP = 800.0;
 const float VELOCITY_KI = 4.0;
@@ -14,6 +14,7 @@ const float VELOCITY_KD = 500.0;
 const float VELOCITY_MIN = 0.1;
 const int DUTY_LIMIT = 200;
 const int STRAIGHT_MODE = 1;
+const int TURN_MODE = 2;
 
 int sensor_count = 0;
 uint16_t adc_raw[5] = {0};
@@ -38,3 +39,5 @@ float velocity_r_err_int = 0;
 float accel = 0;
 float length_run = 0;
 int run_mode = 0;
+float angle_measured = 0;
+float angular_velocity_offset = 0;
