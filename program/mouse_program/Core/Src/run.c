@@ -56,6 +56,21 @@ float read_angular_velocity(void) {
   return angular_velocity;
 }
 
+void imu_init(void) {
+  imu_write1byte(0x06, 0x01);
+  delay_us(10);
+
+  imu_read1byte(0x00);
+  HAL_Delay(500);
+
+  float offset_sum = 0;
+  for (int i = 0; i < 10; i++) {
+    offset_sum += read_angular_velocity();
+    HAL_Delay(5);
+  }
+  angular_velocity_offset = offset_sum / 10.0;
+}
+
 void straight(float length, float velocity_max, float accel_ref) {
   length_run = 0;
   accel = accel_ref;

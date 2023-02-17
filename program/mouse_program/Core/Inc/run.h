@@ -13,5 +13,6 @@ void motor_off(void);
 void imu_write1byte(uint8_t address, uint8_t data);
 uint8_t imu_read1byte(uint8_t address);
 float read_angular_velocity(void);
+void imu_init(void);
 void straight(float length, float velocity_max, float accel_ref);
 #endif /* INC_RUN_H_ */

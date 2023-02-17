@@ -125,15 +125,7 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim4);
   HAL_TIM_Base_Start_IT(&htim5);
   int mode = 0;
-
-  // IMU初期化
-  imu_write1byte(0x06, 0x01);
-  delay_us(10);
-
-  imu_read1byte(0x00);
-  HAL_Delay(500);
-
-  angular_velocity_offset = read_angular_velocity();
+  imu_init();
 
   /* USER CODE END 2 */
 
