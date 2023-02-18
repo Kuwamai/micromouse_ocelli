@@ -21,6 +21,9 @@ extern const float ANGULAR_VELOCITY_KP;
 extern const float ANGULAR_VELOCITY_KI;
 extern const float ANGULAR_VELOCITY_KD;
 extern const float ANGULAR_VELOCITY_MIN;
+extern const float WALL_CONTROL_KP;
+extern const float WALL_CONTROL_KI;
+extern const float WALL_CONTROL_KD;
 extern const int DUTY_LIMIT;
 extern const int STRAIGHT_MODE;
 extern const int TURN_MODE;
@@ -40,6 +43,7 @@ extern t_sensor sensor_fl;
 extern t_sensor sensor_l;
 extern t_sensor sensor_r;
 extern t_sensor sensor_fr;
+extern t_wall_control wall_control;
 
 extern int16_t encoder_l;
 extern int16_t encoder_r;
