@@ -235,6 +235,8 @@ void TIM4_IRQHandler(void)
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
 
       sensor_l.is_wall =  sensor_l.value > SENSOR_L_TH;
+      if (sensor_l.is_wall) sensor_l.error = SENSOR_L_REF - sensor_l.value;
+      else sensor_l.error = 0;
       sensor_count++;
       break;
     case 2:
@@ -244,6 +246,8 @@ void TIM4_IRQHandler(void)
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
 
       sensor_r.is_wall =  sensor_r.value > SENSOR_R_TH;
+      if (sensor_r.is_wall) sensor_r.error = SENSOR_R_REF - sensor_r.value;
+      else sensor_r.error = 0;
       sensor_count++;
       break;
     case 3:
