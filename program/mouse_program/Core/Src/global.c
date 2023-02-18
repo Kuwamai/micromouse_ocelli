@@ -7,7 +7,7 @@
 #include <global.h>
 
 // 車輪径 [m]
-const float TIRE_DIAMETER = 0.0133;
+const float TIRE_DIAMETER = 0.0131;
 // 円周率
 const float M_PI = 3.141592;
 
@@ -30,7 +30,7 @@ const float ANGULAR_VELOCITY_KD = 0.0001;
 const float ANGULAR_VELOCITY_MIN = 30.0;
 
 // 壁制御Pゲイン
-const float WALL_CONTROL_KP = 0.01;
+const float WALL_CONTROL_KP = 0.1;
 const float WALL_CONTROL_KI = 0;
 const float WALL_CONTROL_KD = 0;
 
@@ -51,7 +51,7 @@ const float SENSOR_R_TH = 0.11 + 0.05;
 const float SENSOR_FR_TH = 0.09;
 // 壁制御目標値 [V]
 const float SENSOR_L_REF = 0.32;
-const float SENSOR_R_REF = 0.25;
+const float SENSOR_R_REF = 0.23;
 
 // センサ用割り込みカウンタ
 int sensor_count = 0;
