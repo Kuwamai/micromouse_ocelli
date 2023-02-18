@@ -10,6 +10,7 @@
 const float TIRE_DIAMETER = 0.0133;
 // 円周率
 const float M_PI = 3.141592;
+
 // 速度制御Pゲイン
 const float VELOCITY_KP = 800.0;
 // 速度制御Iゲイン
@@ -18,6 +19,7 @@ const float VELOCITY_KI = 4.0;
 const float VELOCITY_KD = 500.0;
 // 最低速度 [m/s]
 const float VELOCITY_MIN = 0.1;
+
 // 角速度制御Pゲイン
 const float ANGULAR_VELOCITY_KP = 0.001;
 // 角速度制御Iゲイン
@@ -26,6 +28,12 @@ const float ANGULAR_VELOCITY_KI = 0.0001;
 const float ANGULAR_VELOCITY_KD = 0.0001;
 // 最低角速度 [deg/s]
 const float ANGULAR_VELOCITY_MIN = 30.0;
+
+// 壁制御Pゲイン
+const float WALL_CONTROL_KP = 0.01;
+const float WALL_CONTROL_KI = 0;
+const float WALL_CONTROL_KD = 0;
+
 // 最大Duty比
 const int DUTY_LIMIT = 200;
 // 直進モード
@@ -36,14 +44,25 @@ const int TURN_MODE = 2;
 const int LEFT = 1;
 // 右
 const int RIGHT = 2;
+// 壁閾値 [V]
+const float SENSOR_FL_TH = 0.1;
+const float SENSOR_L_TH = 0.12 + 0.05;
+const float SENSOR_R_TH = 0.11 + 0.05;
+const float SENSOR_FR_TH = 0.1;
+// 壁制御目標値 [V]
+const float SENSOR_L_REF = 0.32;
+const float SENSOR_R_REF = 0.25;
 
 // センサ用割り込みカウンタ
 int sensor_count = 0;
 int battery_alert_count = 0;
 // 12 bit AD値
 uint16_t adc_raw[5] = {0};
-// AD値 [V]
-float adc_voltage[5] = {0};
+t_sensor sensor_fl;
+t_sensor sensor_l;
+t_sensor sensor_r;
+t_sensor sensor_fr;
+t_wall_control wall_control;
 
 // 12 bitエンコーダ値
 int16_t encoder_l = 0;

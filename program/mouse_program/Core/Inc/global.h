@@ -9,6 +9,7 @@
 #define GLOBAL_H_
 
 #include <stdint.h>
+#include <mytypedef.h>
 
 extern const float TIRE_DIAMETER;
 extern const float M_PI;
@@ -20,16 +21,29 @@ extern const float ANGULAR_VELOCITY_KP;
 extern const float ANGULAR_VELOCITY_KI;
 extern const float ANGULAR_VELOCITY_KD;
 extern const float ANGULAR_VELOCITY_MIN;
+extern const float WALL_CONTROL_KP;
+extern const float WALL_CONTROL_KI;
+extern const float WALL_CONTROL_KD;
 extern const int DUTY_LIMIT;
 extern const int STRAIGHT_MODE;
 extern const int TURN_MODE;
 extern const int LEFT;
 extern const int RIGHT;
+extern const float SENSOR_FL_TH;
+extern const float SENSOR_L_TH;
+extern const float SENSOR_R_TH;
+extern const float SENSOR_FR_TH;
+extern const float SENSOR_L_REF;
+extern const float SENSOR_R_REF;
 
 extern int sensor_count;
 extern int battery_alert_count;
 extern uint16_t adc_raw[5];
-extern float adc_voltage[5];
+extern t_sensor sensor_fl;
+extern t_sensor sensor_l;
+extern t_sensor sensor_r;
+extern t_sensor sensor_fr;
+extern t_wall_control wall_control;
 
 extern int16_t encoder_l;
 extern int16_t encoder_r;
