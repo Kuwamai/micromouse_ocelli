@@ -125,6 +125,8 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim4);
   HAL_TIM_Base_Start_IT(&htim5);
   int mode = 0;
+  imu_init();
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -135,27 +137,49 @@ int main(void)
       case 1:
         if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
           HAL_Delay(1000);
-          straight(0.1, 0.3, 1.0);
+          motor_on();
+          turn(90.0, 180.0, 180.0, LEFT);
+          /*
+          run_mode = TURN_MODE;
+          angular_velocity_ref = 180;
+          HAL_Delay(5000);
+          */
+          run_mode = 0;
+          motor_off();
+          //straight(0.1, 0.3, 1.0);
         }
         break;
       case 2:
         if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
-          velocity_l_ref = 0.1;
-          velocity_r_ref = 0.1;
-          motor_on();
+          HAL_Delay(1000);
+          turn(90.0, 180.0, 180.0, RIGHT);
+          /*
+          straight(0.1, 0.3, 1.0);
+          straight(0.1, 0.3, 1.0);
+          straight(0.1, 0.3, 1.0);
+          */
         }
         break;
       case 3:
         if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
-          motor_off();
+          HAL_Delay(1000);
+          straight(0.3, 0.3, 1.0);
+          
+          // velocity_l_ref = 0.1;
+          // velocity_r_ref = 0.1;
+          // motor_on();
         }
         break;
       case 4:
         if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
+          HAL_Delay(1000);
+          motor_off();
         }
         break;
       case 5:
         if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
+          angle_measured = 0;
+          HAL_Delay(1000);
         }
         break;
     }

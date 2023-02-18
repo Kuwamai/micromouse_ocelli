@@ -6,9 +6,10 @@
  */
 
 #include <stm32f4xx_hal.h>
-void delay_us(TIM_HandleTypeDef *htim, uint16_t us) {
-  __HAL_TIM_SET_COUNTER(htim, 0);
-  while(__HAL_TIM_GET_COUNTER(htim) < us);
+void delay_us(uint16_t us) {
+  extern TIM_HandleTypeDef htim2;
+  __HAL_TIM_SET_COUNTER(&htim2, 0);
+  while(__HAL_TIM_GET_COUNTER(&htim2) < us);
   return;
 }
 

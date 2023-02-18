@@ -24,6 +24,7 @@
 /* USER CODE BEGIN Includes */
 #include <global.h>
 #include <delay_us.h>
+#include <run.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -64,6 +65,7 @@ extern TIM_HandleTypeDef htim5;
 extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim2;
 extern SPI_HandleTypeDef hspi2;
+extern SPI_HandleTypeDef hspi3;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -218,28 +220,28 @@ void TIM4_IRQHandler(void)
   switch(sensor_count) {
     case 0:
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
-      delay_us(&htim2, 15);
+      delay_us(15);
       adc_voltage[sensor_count] = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
       sensor_count++;
       break;
     case 1:
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
-      delay_us(&htim2, 15);
+      delay_us(15);
       adc_voltage[sensor_count] = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
       sensor_count++;
       break;
     case 2:
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
-      delay_us(&htim2, 15);
+      delay_us(15);
       adc_voltage[sensor_count] = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
       sensor_count++;
       break;
     case 3:
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
-      delay_us(&htim2, 15);
+      delay_us(15);
       adc_voltage[sensor_count] = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
       sensor_count++;
@@ -247,6 +249,11 @@ void TIM4_IRQHandler(void)
     case 4:
       adc_voltage[sensor_count] = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       adc_voltage[sensor_count] = adc_voltage[sensor_count] / 2.0 * 3.0 * adjust_volt;
+      if (adc_voltage[sensor_count] < 3.5) {
+        led_control(0xF);
+        motor_off();
+        while(1);
+      }
       sensor_count++;
       break;
     default:
@@ -275,21 +282,48 @@ void TIM5_IRQHandler(void)
     velocity_l_ref = velocity_ref;
     velocity_r_ref = velocity_ref;
   }
+  // 角速度制御
+  if (run_mode == TURN_MODE) {
+    angular_velocity_ref += angular_accel / 1000.0;
+    if (turn_direction == LEFT) {
+      if (angular_velocity_ref > angular_velocity_ref_max) {
+        angular_velocity_ref = angular_velocity_ref_max;
+      }
+    } else if (turn_direction == RIGHT) {
+      if (angular_velocity_ref < angular_velocity_ref_max) {
+        angular_velocity_ref = angular_velocity_ref_max;
+      }
+    }
+    angular_velocity = read_angular_velocity() - angular_velocity_offset;
+    angle_measured += angular_velocity / 1000.0;
+
+    float angular_velocity_err = angular_velocity_ref - angular_velocity;
+    angular_velocity_err_int = angular_velocity_err_int + angular_velocity_err;
+    if (angular_velocity_err_int >  1000) angular_velocity_err_int =  1000;
+    if (angular_velocity_err_int < -1000) angular_velocity_err_int = -1000;
+    float angular_velocity_err_diff = angular_velocity_err_past - angular_velocity_err;
+    angular_velocity_err_past = angular_velocity_err;
+    // 目標速度差 [m/s]
+    float velocity_ref_diff = angular_velocity_err * ANGULAR_VELOCITY_KP + angular_velocity_err_int * ANGULAR_VELOCITY_KI + angular_velocity_err_diff * ANGULAR_VELOCITY_KD;
+    velocity_l_ref = -velocity_ref_diff;
+    velocity_r_ref =  velocity_ref_diff;
+  }
+
   // 速度制御
   uint16_t encoder_address = 0xFFFF;
-  uint16_t spi_data;
+  uint16_t encoder_spi_data;
   int16_t encoder_l_diff_raw = 0;
   int16_t encoder_r_diff_raw = 0;
 
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_RESET);
-  HAL_SPI_TransmitReceive(&hspi2, (uint8_t*)&encoder_address, (uint8_t*)&spi_data, 1, 1);
+  HAL_SPI_TransmitReceive(&hspi2, (uint8_t*)&encoder_address, (uint8_t*)&encoder_spi_data, 1, 1);
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_SET);
-  encoder_l = (spi_data & 0b0011111111111100) >> 2;
+  encoder_l = (encoder_spi_data & 0b0011111111111100) >> 2;
 
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-  HAL_SPI_TransmitReceive(&hspi2, (uint8_t*)&encoder_address, (uint8_t*)&spi_data, 1, 1);
+  HAL_SPI_TransmitReceive(&hspi2, (uint8_t*)&encoder_address, (uint8_t*)&encoder_spi_data, 1, 1);
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
-  encoder_r = (spi_data & 0b0011111111111100) >> 2;
+  encoder_r = (encoder_spi_data & 0b0011111111111100) >> 2;
 
   encoder_l_diff_raw = encoder_l_past - encoder_l;
   if (encoder_l_diff_raw < -2000) {
@@ -354,7 +388,6 @@ void TIM5_IRQHandler(void)
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, GPIO_PIN_RESET);
     __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, duty_r);
   }
-
   /* USER CODE END TIM5_IRQn 0 */
   HAL_TIM_IRQHandler(&htim5);
   /* USER CODE BEGIN TIM5_IRQn 1 */
