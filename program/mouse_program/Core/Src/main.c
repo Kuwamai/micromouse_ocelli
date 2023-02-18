@@ -137,24 +137,26 @@ int main(void)
       case 1:
         if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
           HAL_Delay(1000);
-          straight(0.6, 0.3, 1.0);
+          search_adachi(3, 3, 0.3, 1.0, 180.0, 180.0);
+          
         }
         break;
       case 2:
         if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
           HAL_Delay(1000);
-          turn(90.0, 180.0, 180.0, LEFT);
+          straight(0.6, 0.3, 1.0, 0);
         }
         break;
       case 3:
         if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
           HAL_Delay(1000);
-          turn(90.0, 180.0, 180.0, RIGHT);
+          turn(90.0, 180.0, 180.0, LEFT);
         }
         break;
       case 4:
         if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
           HAL_Delay(1000);
+          turn(90.0, 180.0, 180.0, RIGHT);
           motor_off();
         }
         break;

@@ -45,10 +45,10 @@ const int LEFT = 1;
 // 右
 const int RIGHT = 2;
 // 壁閾値 [V]
-const float SENSOR_FL_TH = 0.1;
+const float SENSOR_FL_TH = 0.07;
 const float SENSOR_L_TH = 0.12 + 0.05;
 const float SENSOR_R_TH = 0.11 + 0.05;
-const float SENSOR_FR_TH = 0.1;
+const float SENSOR_FR_TH = 0.09;
 // 壁制御目標値 [V]
 const float SENSOR_L_REF = 0.32;
 const float SENSOR_R_REF = 0.25;
@@ -118,3 +118,13 @@ float angular_velocity_err_past = 0;
 float angular_velocity_err_int = 0;
 // 角加速度 [deg/s/s]
 float angular_accel = 0;
+
+// for adachi
+const int MASK_SEARCH = 0x01;
+const float HALF_SECTION = 0.09;    //半区画の距離
+const float SECTION = 0.18;        //一区画の距離
+t_position mypos;
+const int MAZESIZE_X = 32;//迷路の大きさ(MAZESIZE_X * MAZESIZE_Y)迷路
+const int MAZESIZE_Y = 32;//迷路の大きさ(MAZESIZE_X * MAZESIZE_Y)迷路
+t_wall			wall[32][32];		//壁の情報を格納する構造体配列
+unsigned char		map[32][32];		//歩数マップ
