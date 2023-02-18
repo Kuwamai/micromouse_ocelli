@@ -38,7 +38,6 @@ extern const int SENSOR_FR_INDEX;
 extern int sensor_count;
 extern int battery_alert_count;
 extern uint16_t adc_raw[5];
-extern float adc_voltage[5];
 extern t_sensor sensor_fl;
 extern t_sensor sensor_l;
 extern t_sensor sensor_r;
