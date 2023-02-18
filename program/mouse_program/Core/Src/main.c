@@ -138,10 +138,12 @@ int main(void)
         if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
           HAL_Delay(1000);
           motor_on();
-          // turn(90.0, 90.0, 90.0, LEFT);
+          turn(90.0, 180.0, 180.0, LEFT);
+          /*
           run_mode = TURN_MODE;
           angular_velocity_ref = 180;
           HAL_Delay(5000);
+          */
           run_mode = 0;
           motor_off();
           //straight(0.1, 0.3, 1.0);
@@ -150,9 +152,12 @@ int main(void)
       case 2:
         if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
           HAL_Delay(1000);
+          turn(90.0, 180.0, 180.0, RIGHT);
+          /*
           straight(0.1, 0.3, 1.0);
           straight(0.1, 0.3, 1.0);
           straight(0.1, 0.3, 1.0);
+          */
         }
         break;
       case 3:

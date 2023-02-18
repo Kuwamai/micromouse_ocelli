@@ -61,7 +61,7 @@ void imu_init(void) {
   delay_us(10);
 
   imu_read1byte(0x00);
-  HAL_Delay(500);
+  HAL_Delay(50);
 
   float offset_sum = 0;
   for (int i = 0; i < 10; i++) {
@@ -69,6 +69,8 @@ void imu_init(void) {
     HAL_Delay(5);
   }
   angular_velocity_offset = offset_sum / 10.0;
+  angular_velocity_err_int = 0;
+  angle_measured = 0;
 }
 
 void straight(float length, float velocity_max, float accel_ref) {
@@ -92,7 +94,42 @@ void straight(float length, float velocity_max, float accel_ref) {
   run_mode = 0;
 }
 
-/*
-void turn(float turn_degree, float angular_accel, float angular_velocity_max, short dir) {
-
-}*/
+void turn(float turn_angle, float angular_accel_ref, float angular_velocity_max, short direction) {
+  HAL_Delay(100);
+  imu_init();
+  angle_measured = 0;
+  run_mode = TURN_MODE;
+  motor_on();
+  turn_direction = direction;
+  if (direction == LEFT) {
+    angular_accel = angular_accel_ref;
+    angular_velocity_ref_max = angular_velocity_max;
+    while ((turn_angle - angle_measured) > (angular_velocity_ref * angular_velocity_ref) / (2.0 * angular_accel_ref));
+    angular_accel = -angular_accel_ref;
+    while (angle_measured < turn_angle) {
+      if (angular_velocity_ref <= ANGULAR_VELOCITY_MIN) {
+        angular_accel = 0;
+        angular_velocity_ref = ANGULAR_VELOCITY_MIN;
+      }
+    }
+  } else if (direction == RIGHT) {
+    angular_accel = -angular_accel_ref;
+    angular_velocity_ref_max = -angular_velocity_max;
+    while ((-turn_angle - angle_measured) < (angular_velocity_ref * angular_velocity_ref) / (2.0 * -angular_accel_ref));
+    angular_accel = angular_accel_ref;
+    while (angle_measured > -turn_angle) {
+      if (angular_velocity_ref >= -ANGULAR_VELOCITY_MIN) {
+        led_control(0b1111);
+        angular_accel = 0;
+        angular_velocity_ref = -ANGULAR_VELOCITY_MIN;
+      }
+    }
+  }
+  angular_accel = 0;
+  angular_velocity_ref = 0;
+  while (angular_velocity >= 1.0 || angular_velocity <= -1.0);
+  motor_off();
+  turn_direction = 0;
+  run_mode = 0;
+  HAL_Delay(100);
+}

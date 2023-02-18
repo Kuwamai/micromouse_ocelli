@@ -88,7 +88,7 @@ int turn_direction = 0;
 float angle_measured = 0;
 // 角速度オフセット [deg/s]
 float angular_velocity_offset = 0;
-// 角速度 [deg/s]
+// 実測角速度 [deg/s]
 float angular_velocity = 0;
 // 目標角速度 [deg/s]
 float angular_velocity_ref = 0;
