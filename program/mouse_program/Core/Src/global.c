@@ -19,9 +19,9 @@ const float VELOCITY_KD = 500.0;
 // 最低速度 [m/s]
 const float VELOCITY_MIN = 0.1;
 // 角速度制御Pゲイン
-const float ANGULAR_VELOCITY_KP = 0.0;
+const float ANGULAR_VELOCITY_KP = 0.5;
 // 角速度制御Iゲイン
-const float ANGULAR_VELOCITY_KI = 0.0;
+const float ANGULAR_VELOCITY_KI = 0.05;
 // 角速度制御Dゲイン
 const float ANGULAR_VELOCITY_KD = 0.0;
 // 最低角速度 [m]
@@ -82,15 +82,17 @@ float accel = 0;
 float length_run = 0;
 // 走行モード
 int run_mode = 0;
-// 機体角度 [deg]
+// 機体角度(半時計周りが正) [deg]
 float angle_measured = 0;
 // 角速度オフセット [deg/s]
 float angular_velocity_offset = 0;
 // 角速度 [deg/s]
 float angular_velocity = 0;
-// 目標角速度 [m/s]
+// 目標角速度 [deg/s]
 float angular_velocity_ref = 0;
-// 最大目標角速度 [m/s]
+// 最大目標角速度 [deg/s]
 float angular_velocity_ref_max = 0;
+float angular_velocity_err_past = 0;
+float angular_velocity_err_int = 0;
 // 角加速度 [deg/s/s]
 float angular_accel = 0;

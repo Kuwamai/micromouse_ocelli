@@ -137,7 +137,11 @@ int main(void)
       case 1:
         if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
           HAL_Delay(1000);
-          straight(0.1, 0.3, 1.0);
+          motor_on();
+          angular_velocity_ref = 90;
+          HAL_Delay(5000);
+          motor_off();
+          //straight(0.1, 0.3, 1.0);
         }
         break;
       case 2:

@@ -16,6 +16,9 @@ extern const float VELOCITY_KP;
 extern const float VELOCITY_KI;
 extern const float VELOCITY_KD;
 extern const float VELOCITY_MIN;
+extern const float ANGULAR_VELOCITY_KP;
+extern const float ANGULAR_VELOCITY_KI;
+extern const float ANGULAR_VELOCITY_KD;
 extern const float ANGULAR_VELOCITY_MIN;
 extern const int DUTY_LIMIT;
 extern const int STRAIGHT_MODE;
@@ -51,5 +54,7 @@ extern float angular_velocity_offset;
 extern float angular_velocity;
 extern float angular_velocity_ref;
 extern float angular_velocity_ref_max;
+extern float angular_velocity_err_past;
+extern float angular_velocity_err_int;
 extern float angular_accel;
 #endif /* GLOBAL_H_ */

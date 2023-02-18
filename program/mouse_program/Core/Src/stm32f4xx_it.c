@@ -282,6 +282,20 @@ void TIM5_IRQHandler(void)
     velocity_l_ref = velocity_ref;
     velocity_r_ref = velocity_ref;
   }
+  // 角速度制御
+  angular_velocity = read_angular_velocity() - angular_velocity_offset;
+  angle_measured += angular_velocity / 1000.0;
+
+  float angular_velocity_err = angular_velocity_ref - angular_velocity;
+  angular_velocity_err_int = angular_velocity_err_int + angular_velocity_err;
+  if (angular_velocity_err_int >  10000) angular_velocity_err_int =  10000;
+  if (angular_velocity_err_int < -10000) angular_velocity_err_int = -10000;
+  float angular_velocity_err_diff = angular_velocity_err_past - angular_velocity_err;
+  angular_velocity_err_past = angular_velocity_err;
+  float velocity_ref_diff = angular_velocity_err * ANGULAR_VELOCITY_KP + angular_velocity_err_int * ANGULAR_VELOCITY_KI + angular_velocity_err_diff * ANGULAR_VELOCITY_KD;
+  velocity_l_ref = -velocity_ref_diff;
+  velocity_r_ref =  velocity_ref_diff;
+
   // 速度制御
   uint16_t encoder_address = 0xFFFF;
   uint16_t encoder_spi_data;
@@ -361,10 +375,6 @@ void TIM5_IRQHandler(void)
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, GPIO_PIN_RESET);
     __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, duty_r);
   }
-
-  float angular_velocity = read_angular_velocity() - angular_velocity_offset;
-  angle_measured += angular_velocity / 1000.0;
-  
   /* USER CODE END TIM5_IRQn 0 */
   HAL_TIM_IRQHandler(&htim5);
   /* USER CODE BEGIN TIM5_IRQn 1 */
