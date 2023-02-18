@@ -316,6 +316,8 @@ void TIM5_IRQHandler(void)
       wall_control.error = sensor_l.error - sensor_r.error;
     } else if (sensor_r.is_wall || sensor_l.is_wall) {
       wall_control.error = (sensor_l.error - sensor_r.error) * 2.0;
+    } else {
+      wall_control.error = 0;
     }
 
     wall_control.error_int += wall_control.error;
