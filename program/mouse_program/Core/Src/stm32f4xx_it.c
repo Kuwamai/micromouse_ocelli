@@ -307,7 +307,7 @@ void TIM5_IRQHandler(void)
     if (velocity_ref > velocity_ref_max) {
       velocity_ref = velocity_ref_max;
     }
-    if (sensor_fl.value + sensor_fr.value <= (SENSOR_FL_TH + SENSOR_FR_TH) * 3.0) {
+    if (sensor_fl.value + sensor_fr.value <= (SENSOR_FL_TH + SENSOR_FR_TH) * 3.0 && velocity_ref >= 0.01) {
       // 壁制御
       wall_control.error_past = wall_control.error;
 
@@ -327,9 +327,7 @@ void TIM5_IRQHandler(void)
       wall_control.error_diff = wall_control.error_past - wall_control.error;
 
       velocity_ref_diff = wall_control.error * WALL_CONTROL_KP + wall_control.error_int * WALL_CONTROL_KI + wall_control.error_diff * WALL_CONTROL_KD;
-      led_control(0x0);
     } else {
-      led_control(0xF);
     }
     velocity_l_ref = velocity_ref - velocity_ref_diff;
     velocity_r_ref = velocity_ref + velocity_ref_diff;

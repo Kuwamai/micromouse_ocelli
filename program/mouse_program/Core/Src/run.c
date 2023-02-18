@@ -557,23 +557,26 @@ void search_adachi(int gx, int gy, float search_velocity, float search_accel, fl
     switch(get_nextdir(gx,gy,MASK_SEARCH,&glob_nextdir))		//次に行く方向を戻り値とする関数を呼ぶ
     {
       case front:
-
+        led_control(0b0001);
         straight(SECTION,search_accel,search_velocity,search_velocity);		//半区画進む
         break;
     
       case right:
+        led_control(0b0010);
         straight(HALF_SECTION,search_accel,search_velocity,0);		//半区画進む
         turn(90,turn_accel,turn_speed,RIGHT);				//右に曲がって
         straight(HALF_SECTION,search_accel,search_velocity,search_velocity);
         break;
       
       case left:
+        led_control(0b0100);
         straight(HALF_SECTION,search_accel,search_velocity,0);		//半区画進む
         turn(90,turn_accel,turn_speed,LEFT);				//左に曲がって
         straight(HALF_SECTION,search_accel,search_velocity,search_velocity);
         break;
       
       case rear:
+        led_control(0b1000);
         straight(HALF_SECTION,search_accel,search_velocity,0);		//半区画進む
         turn(180,turn_accel,turn_speed,RIGHT);					//180ターン
         straight(HALF_SECTION,search_accel,search_velocity,search_velocity);
