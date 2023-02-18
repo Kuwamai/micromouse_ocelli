@@ -39,6 +39,7 @@ const int RIGHT = 2;
 
 // センサ用割り込みカウンタ
 int sensor_count = 0;
+int battery_alert_count = 0;
 // 12 bit AD値
 uint16_t adc_raw[5] = {0};
 // AD値 [V]

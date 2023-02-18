@@ -249,10 +249,18 @@ void TIM4_IRQHandler(void)
     case 4:
       adc_voltage[sensor_count] = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       adc_voltage[sensor_count] = adc_voltage[sensor_count] / 2.0 * 3.0 * adjust_volt;
-      if (adc_voltage[sensor_count] < 3.5) {
-        led_control(0xF);
-        motor_off();
-        while(1);
+      if (adc_voltage[sensor_count] < 3.6) {
+        battery_alert_count++;
+        if (battery_alert_count > 100) led_control(0xF);
+        if (battery_alert_count > 200) {
+          led_control(0);
+          battery_alert_count = 0;
+        }
+        if (adc_voltage[sensor_count] < 3.5) {
+          led_control(0xF);
+          motor_off();
+          while(1);
+        }
       }
       sensor_count++;
       break;

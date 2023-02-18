@@ -27,6 +27,7 @@ extern const int LEFT;
 extern const int RIGHT;
 
 extern int sensor_count;
+extern int battery_alert_count;
 extern uint16_t adc_raw[5];
 extern float adc_voltage[5];
 
