@@ -216,47 +216,48 @@ void TIM4_IRQHandler(void)
   uint16_t pins[4] = {GPIO_PIN_11, GPIO_PIN_12, GPIO_PIN_0, GPIO_PIN_1};
   GPIO_TypeDef* ports[4] = {GPIOB, GPIOB, GPIOA, GPIOA};
   const float adjust_volt = 1.011;
+  float battery_voltage = 0;
 
   switch(sensor_count) {
     case 0:
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
       delay_us(15);
-      adc_voltage[sensor_count] = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
+      sensor_fl.value = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
       sensor_count++;
       break;
     case 1:
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
       delay_us(15);
-      adc_voltage[sensor_count] = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
+      sensor_l.value = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
       sensor_count++;
       break;
     case 2:
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
       delay_us(15);
-      adc_voltage[sensor_count] = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
+      sensor_r.value = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
       sensor_count++;
       break;
     case 3:
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
       delay_us(15);
-      adc_voltage[sensor_count] = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
+      sensor_fr.value = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
       sensor_count++;
       break;
     case 4:
-      adc_voltage[sensor_count] = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
-      adc_voltage[sensor_count] = adc_voltage[sensor_count] / 2.0 * 3.0 * adjust_volt;
-      if (adc_voltage[sensor_count] < 3.6) {
+      battery_voltage = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
+      battery_voltage = battery_voltage / 2.0 * 3.0 * adjust_volt;
+      if (battery_voltage < 3.6) {
         battery_alert_count++;
         if (battery_alert_count > 100) led_control(0xF);
         if (battery_alert_count > 200) {
           led_control(0);
           battery_alert_count = 0;
         }
-        if (adc_voltage[sensor_count] < 3.5) {
+        if (battery_voltage < 3.5) {
           led_control(0xF);
           motor_off();
           while(1);

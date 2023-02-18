@@ -36,14 +36,25 @@ const int TURN_MODE = 2;
 const int LEFT = 1;
 // 右
 const int RIGHT = 2;
+// 壁閾値 [V]
+const float SENSOR_FL_TH;
+const float SENSOR_L_TH;
+const float SENSOR_R_TH;
+const float SENSOR_FR_TH;
+const int SENSOR_FL_INDEX = 0;
+const int SENSOR_L_INDEX = 1;
+const int SENSOR_R_INDEX = 2;
+const int SENSOR_FR_INDEX = 3;
 
 // センサ用割り込みカウンタ
 int sensor_count = 0;
 int battery_alert_count = 0;
 // 12 bit AD値
 uint16_t adc_raw[5] = {0};
-// AD値 [V]
-float adc_voltage[5] = {0};
+t_sensor sensor_fl;
+t_sensor sensor_l;
+t_sensor sensor_r;
+t_sensor sensor_fr;
 
 // 12 bitエンコーダ値
 int16_t encoder_l = 0;
