@@ -13,6 +13,7 @@
 typedef struct
 {
   float value;   // センサ値 [V]
+  float value_past;   // センサ値 [V]
   float error;   // 壁制御偏差 [V]
   bool is_wall;  // 壁の有無
 }t_sensor;

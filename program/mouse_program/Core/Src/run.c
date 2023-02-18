@@ -92,7 +92,7 @@ void straight(float length, float accel_ref, float velocity_max, float velocity_
     velocity_ref = 0;
     while (velocity_l >= 0 && velocity_r >= 0);
   } else {
-    while ((length - 0.01 - length_run) > ((velocity_ref * velocity_ref) - (velocity_end * velocity_end)) / (2.0 * accel_ref));
+    while ((length - length_run) > ((velocity_ref * velocity_ref) - (velocity_end * velocity_end)) / (2.0 * accel_ref));
     accel = -accel_ref;
     while (length_run < length) {
       if (velocity_ref <= velocity_end) {
@@ -523,7 +523,6 @@ void search_adachi(int gx, int gy, float search_velocity, float search_accel, fl
     //wall_control.enable = true;    // いらないかも
     //MOT_CWCCW_R = MOT_CWCCW_L = MOT_FORWARD;		//前方に進む
     //len_mouse = 0;					//進んだ距離カウント用変数をリセット
-    length_run = 0;
     //MTU.TSTR.BIT.CST3 = MTU.TSTR.BIT.CST4 = 1;		//カウントスタート
   
     mypos.dir = glob_nextdir;				//方向を更新
@@ -585,7 +584,6 @@ void search_adachi(int gx, int gy, float search_velocity, float search_accel, fl
 
     //con_wall.enable = true;						//壁制御を有効にする
     //len_mouse = 0;						//進んだ距離をカウントする変数をリセット
-    length_run = 0;
     //MTU.TSTR.BIT.CST3 = MTU.TSTR.BIT.CST4 = 1;			//カウントスタート
   
     mypos.dir = glob_nextdir;					//方向を更新

@@ -179,10 +179,19 @@ int main(void)
       case 5:
         if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
           HAL_Delay(1000);
-          straight(SECTION, 0.3, 1.0, 0);
-          straight(SECTION, 0.3, 1.0, 0);
-          straight(SECTION, 0.3, 1.0, 0);
-          straight(SECTION, 0.3, 1.0, 0);
+          straight(HALF_SECTION, 1.0, 0.3, 0);
+          straight(SECTION, 1.0, 0.3, 0);
+          straight(SECTION, 1.0, 0.3, 0);
+          straight(SECTION, 1.0, 0.3, 0);
+        }
+        break;
+      case 6:
+        if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
+          HAL_Delay(1000);
+          straight(HALF_SECTION, 1.0, 0.3, 0.3);
+          straight(SECTION, 1.0, 0.3, 0.3);
+          straight(SECTION, 1.0, 0.3, 0.3);
+          straight(SECTION, 1.0, 0.3, 0.3);
         }
         break;
     }
