@@ -49,6 +49,7 @@ extern float velocity_r_err_int;
 extern float accel;
 extern float length_run;
 extern int run_mode;
+extern int turn_direction;
 extern float angle_measured;
 extern float angular_velocity_offset;
 extern float angular_velocity;

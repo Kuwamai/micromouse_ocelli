@@ -283,18 +283,31 @@ void TIM5_IRQHandler(void)
     velocity_r_ref = velocity_ref;
   }
   // 角速度制御
-  angular_velocity = read_angular_velocity() - angular_velocity_offset;
-  angle_measured += angular_velocity / 1000.0;
+  if (run_mode == TURN_MODE) {
+    angular_velocity_ref += angular_accel / 1000.0;
+    if (turn_direction == LEFT) {
+      if (angular_velocity_ref > angular_velocity_ref_max) {
+        angular_velocity_ref = angular_velocity_ref_max;
+      }
+    } else if (turn_direction == RIGHT) {
+      if (angular_velocity_ref < angular_velocity_ref_max) {
+        angular_velocity_ref = angular_velocity_ref_max;
+      }
+    }
+    angular_velocity = read_angular_velocity() - angular_velocity_offset;
+    angle_measured += angular_velocity / 1000.0;
 
-  float angular_velocity_err = angular_velocity_ref - angular_velocity;
-  angular_velocity_err_int = angular_velocity_err_int + angular_velocity_err;
-  if (angular_velocity_err_int >  10000) angular_velocity_err_int =  10000;
-  if (angular_velocity_err_int < -10000) angular_velocity_err_int = -10000;
-  float angular_velocity_err_diff = angular_velocity_err_past - angular_velocity_err;
-  angular_velocity_err_past = angular_velocity_err;
-  float velocity_ref_diff = angular_velocity_err * ANGULAR_VELOCITY_KP + angular_velocity_err_int * ANGULAR_VELOCITY_KI + angular_velocity_err_diff * ANGULAR_VELOCITY_KD;
-  velocity_l_ref = -velocity_ref_diff;
-  velocity_r_ref =  velocity_ref_diff;
+    float angular_velocity_err = angular_velocity_ref - angular_velocity;
+    angular_velocity_err_int = angular_velocity_err_int + angular_velocity_err;
+    if (angular_velocity_err_int >  1000) angular_velocity_err_int =  1000;
+    if (angular_velocity_err_int < -1000) angular_velocity_err_int = -1000;
+    float angular_velocity_err_diff = angular_velocity_err_past - angular_velocity_err;
+    angular_velocity_err_past = angular_velocity_err;
+    // 目標速度差 [m/s]
+    float velocity_ref_diff = angular_velocity_err * ANGULAR_VELOCITY_KP + angular_velocity_err_int * ANGULAR_VELOCITY_KI + angular_velocity_err_diff * ANGULAR_VELOCITY_KD;
+    velocity_l_ref = -velocity_ref_diff;
+    velocity_r_ref =  velocity_ref_diff;
+  }
 
   // 速度制御
   uint16_t encoder_address = 0xFFFF;

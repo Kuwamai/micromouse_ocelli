@@ -19,13 +19,13 @@ const float VELOCITY_KD = 500.0;
 // 最低速度 [m/s]
 const float VELOCITY_MIN = 0.1;
 // 角速度制御Pゲイン
-const float ANGULAR_VELOCITY_KP = 0.5;
+const float ANGULAR_VELOCITY_KP = 0.001;
 // 角速度制御Iゲイン
-const float ANGULAR_VELOCITY_KI = 0.05;
+const float ANGULAR_VELOCITY_KI = 0.0001;
 // 角速度制御Dゲイン
-const float ANGULAR_VELOCITY_KD = 0.0;
-// 最低角速度 [m]
-const float ANGULAR_VELOCITY_MIN = 0.1;
+const float ANGULAR_VELOCITY_KD = 0.0001;
+// 最低角速度 [deg/s]
+const float ANGULAR_VELOCITY_MIN = 30.0;
 // 最大Duty比
 const int DUTY_LIMIT = 200;
 // 直進モード
@@ -33,9 +33,9 @@ const int STRAIGHT_MODE = 1;
 // 旋回モード
 const int TURN_MODE = 2;
 // 左
-const int LEFT = 0;
+const int LEFT = 1;
 // 右
-const int RIGHT = 1;
+const int RIGHT = 2;
 
 // センサ用割り込みカウンタ
 int sensor_count = 0;
@@ -82,6 +82,8 @@ float accel = 0;
 float length_run = 0;
 // 走行モード
 int run_mode = 0;
+// 旋回方向
+int turn_direction = 0;
 // 機体角度(半時計周りが正) [deg]
 float angle_measured = 0;
 // 角速度オフセット [deg/s]
