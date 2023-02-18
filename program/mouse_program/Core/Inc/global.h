@@ -30,10 +30,6 @@ extern const float SENSOR_FL_TH;
 extern const float SENSOR_L_TH;
 extern const float SENSOR_R_TH;
 extern const float SENSOR_FR_TH;
-extern const int SENSOR_FL_INDEX;
-extern const int SENSOR_L_INDEX;
-extern const int SENSOR_R_INDEX;
-extern const int SENSOR_FR_INDEX;
 
 extern int sensor_count;
 extern int battery_alert_count;
