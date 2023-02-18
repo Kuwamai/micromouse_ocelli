@@ -126,6 +126,7 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim5);
   int mode = 0;
   imu_init();
+  init_maze();
 
   /* USER CODE END 2 */
 
@@ -137,14 +138,24 @@ int main(void)
       case 1:
         if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
           HAL_Delay(1000);
-          search_adachi(3, 3, 0.3, 1.0, 180.0, 180.0);
+					angle_measured = 0;
+					mypos.x = mypos.y = 0;			//座標を初期化
+					mypos.dir = north;			//方角を初期化
+          search_adachi(2, 2, 0.3, 1.0, 180.0, 180.0);
+					//turn(180,TURN_ACCEL,TURN_SPEED,RIGHT);			//ゴールしたら180度回転する
+					mypos.dir = (mypos.dir+6) % 4;		//方角を更新
+					// map_write();
+					HAL_Delay(100);
+					//search_adachi(0,0);			//スタート地点まで足立法で帰ってくる
+					//turn(180,TURN_ACCEL,TURN_SPEED,RIGHT);			//帰ってきたら180度回転	
+					// map_write();
           
         }
         break;
       case 2:
         if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
           HAL_Delay(1000);
-          straight(0.6, 0.3, 1.0, 0);
+          straight(SECTION * 4.0, 0.3, 1.0, 0);
         }
         break;
       case 3:
