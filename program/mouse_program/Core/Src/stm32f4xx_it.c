@@ -307,26 +307,30 @@ void TIM5_IRQHandler(void)
     if (velocity_ref > velocity_ref_max) {
       velocity_ref = velocity_ref_max;
     }
+    if (sensor_fl.value + sensor_fr.value <= (SENSOR_FL_TH + SENSOR_FR_TH) * 3.0) {
+      // 壁制御
+      wall_control.error_past = wall_control.error;
 
-    // 壁制御
-    wall_control.error_past = wall_control.error;
+      if (sensor_r.is_wall && sensor_l.is_wall) {
+        // 角速度が左曲がりを正としているので偏差も左を正とする
+        wall_control.error = sensor_l.error - sensor_r.error;
+      } else if (sensor_r.is_wall || sensor_l.is_wall) {
+        wall_control.error = (sensor_l.error - sensor_r.error) * 2.0;
+      } else {
+        wall_control.error = 0;
+      }
 
-    if (sensor_r.is_wall && sensor_l.is_wall) {
-      // 角速度が左曲がりを正としているので偏差も左を正とする
-      wall_control.error = sensor_l.error - sensor_r.error;
-    } else if (sensor_r.is_wall || sensor_l.is_wall) {
-      wall_control.error = (sensor_l.error - sensor_r.error) * 2.0;
+      wall_control.error_int += wall_control.error;
+      if (wall_control.error_int > 100) wall_control.error_int = 100;
+      else if (wall_control.error_int < -100) wall_control.error_int = -100;
+
+      wall_control.error_diff = wall_control.error_past - wall_control.error;
+
+      velocity_ref_diff = wall_control.error * WALL_CONTROL_KP + wall_control.error_int * WALL_CONTROL_KI + wall_control.error_diff * WALL_CONTROL_KD;
+      led_control(0x0);
     } else {
-      wall_control.error = 0;
+      led_control(0xF);
     }
-
-    wall_control.error_int += wall_control.error;
-    if (wall_control.error_int > 100) wall_control.error_int = 100;
-    else if (wall_control.error_int < -100) wall_control.error_int = -100;
-
-    wall_control.error_diff = wall_control.error_past - wall_control.error;
-
-    velocity_ref_diff = wall_control.error * WALL_CONTROL_KP + wall_control.error_int * WALL_CONTROL_KI + wall_control.error_diff * WALL_CONTROL_KD;
     velocity_l_ref = velocity_ref - velocity_ref_diff;
     velocity_r_ref = velocity_ref + velocity_ref_diff;
   }
