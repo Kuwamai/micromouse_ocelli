@@ -224,6 +224,8 @@ void TIM4_IRQHandler(void)
       delay_us(15);
       sensor_fl.value = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
+
+      sensor_fl.is_wall =  sensor_fl.value > SENSOR_FL_TH;
       sensor_count++;
       break;
     case 1:
@@ -231,6 +233,8 @@ void TIM4_IRQHandler(void)
       delay_us(15);
       sensor_l.value = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
+
+      sensor_l.is_wall =  sensor_l.value > SENSOR_L_TH;
       sensor_count++;
       break;
     case 2:
@@ -238,6 +242,8 @@ void TIM4_IRQHandler(void)
       delay_us(15);
       sensor_r.value = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
+
+      sensor_r.is_wall =  sensor_r.value > SENSOR_R_TH;
       sensor_count++;
       break;
     case 3:
@@ -245,6 +251,8 @@ void TIM4_IRQHandler(void)
       delay_us(15);
       sensor_fr.value = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
+
+      sensor_fr.is_wall =  sensor_fr.value > SENSOR_FR_TH;
       sensor_count++;
       break;
     case 4:

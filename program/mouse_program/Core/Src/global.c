@@ -37,10 +37,10 @@ const int LEFT = 1;
 // 右
 const int RIGHT = 2;
 // 壁閾値 [V]
-const float SENSOR_FL_TH;
-const float SENSOR_L_TH;
-const float SENSOR_R_TH;
-const float SENSOR_FR_TH;
+const float SENSOR_FL_TH = 0.1;
+const float SENSOR_L_TH = 0.1;
+const float SENSOR_R_TH = 0.1;
+const float SENSOR_FR_TH = 0.1;
 const int SENSOR_FL_INDEX = 0;
 const int SENSOR_L_INDEX = 1;
 const int SENSOR_R_INDEX = 2;
