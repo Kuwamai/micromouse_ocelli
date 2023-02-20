@@ -6,8 +6,17 @@
  */
 #include <global.h>
 
+// 壁閾値 [V]
+const float SENSOR_FL_TH = 0.14;
+const float SENSOR_L_TH = 0.1;
+const float SENSOR_R_TH = 0.1;
+const float SENSOR_FR_TH = 0.15;
+// 壁制御目標値 [V]
+const float SENSOR_L_REF = 0.275;
+const float SENSOR_R_REF = 0.265;
 // 車輪径 [m]
-const float TIRE_DIAMETER = 0.01305;
+const float TIRE_DIAMETER = 0.0134;
+// const float TIRE_DIAMETER = 0.01305; // これがいい感じだけど処理落ちして時間かかってる？
 // 円周率
 const float M_PI = 3.141592;
 
@@ -44,14 +53,6 @@ const int TURN_MODE = 2;
 const int LEFT = 1;
 // 右
 const int RIGHT = 2;
-// 壁閾値 [V]
-const float SENSOR_FL_TH = 0.07;
-const float SENSOR_L_TH = 0.1;
-const float SENSOR_R_TH = 0.1;
-const float SENSOR_FR_TH = 0.07;
-// 壁制御目標値 [V]
-const float SENSOR_L_REF = 0.26;
-const float SENSOR_R_REF = 0.23;
 
 // センサ用割り込みカウンタ
 int sensor_count = 0;

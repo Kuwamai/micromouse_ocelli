@@ -137,13 +137,15 @@ int main(void)
     switch (mode) {
       case 1:
         if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
-          HAL_Delay(1000);
+          led_control(0xF);
+          HAL_Delay(4000);
+          led_control(0x0);
 					angle_measured = 0;
 					mypos.x = mypos.y = 0;			//座標を初期化
 					mypos.dir = north;			//方角を初期化
           search_adachi(7, 7, 0.3, 1.0, 270.0, 270.0);
 					//turn(180,TURN_ACCEL,TURN_SPEED,RIGHT);			//ゴールしたら180度回転する
-					mypos.dir = (mypos.dir+6) % 4;		//方角を更新
+					// mypos.dir = (mypos.dir+6) % 4;		//方角を更新
 					// map_write();
 					HAL_Delay(100);
 					//search_adachi(0,0);			//スタート地点まで足立法で帰ってくる
@@ -154,12 +156,60 @@ int main(void)
         break;
       case 2:
         if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
-          HAL_Delay(1000);
-          straight(SECTION * 15.0, 0.3, 1.0, 0);
+          led_control(0xF);
+          HAL_Delay(4000);
+          led_control(0x0);
+					angle_measured = 0;
+					mypos.x = mypos.y = 0;			//座標を初期化
+					mypos.dir = north;			//方角を初期化
+          search_adachi(7, 7, 0.4, 1.2, 270.0, 270.0);
+					HAL_Delay(100);
         }
         break;
       case 3:
         if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
+          led_control(0xF);
+          HAL_Delay(4000);
+          led_control(0x0);
+					angle_measured = 0;
+					mypos.x = mypos.y = 0;			//座標を初期化
+					mypos.dir = north;			//方角を初期化
+          search_adachi(7, 7, 0.7, 1.2, 270.0, 270.0);
+					HAL_Delay(100);
+        }
+        break;
+      case 4:
+        if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
+          led_control(0xF);
+          HAL_Delay(4000);
+          led_control(0x0);
+					angle_measured = 0;
+					mypos.x = mypos.y = 0;			//座標を初期化
+					mypos.dir = north;			//方角を初期化
+          search_adachi(7, 7, 1.0, 1.2, 270.0, 270.0);
+					HAL_Delay(100);
+        }
+        break;
+      case 5:
+        if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
+          led_control(0xF);
+          HAL_Delay(4000);
+          led_control(0x0);
+					angle_measured = 0;
+					mypos.x = mypos.y = 0;			//座標を初期化
+					mypos.dir = north;			//方角を初期化
+          search_adachi(7, 7, 1.2, 1.5, 270.0, 270.0);
+					HAL_Delay(100);
+        }
+        break;
+      case 6:
+        if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
+          HAL_Delay(1000);
+          straight(SECTION * 15.0, 0.3, 1.0, 0);
+        }
+        break;
+      case 7:
+        if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
           HAL_Delay(1000);
           turn(90.0, 270.0, 270.0, LEFT);
           turn(90.0, 270.0, 270.0, LEFT);
@@ -167,7 +217,7 @@ int main(void)
           turn(90.0, 270.0, 270.0, LEFT);
         }
         break;
-      case 4:
+      case 8:
         if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
           HAL_Delay(1000);
           turn(90.0, 270.0, 270.0, RIGHT);
@@ -176,7 +226,7 @@ int main(void)
           turn(90.0, 270.0, 270.0, RIGHT);
         }
         break;
-      case 5:
+      case 9:
         if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
           HAL_Delay(1000);
           straight(HALF_SECTION, 1.0, 0.3, 0);
@@ -185,7 +235,7 @@ int main(void)
           straight(SECTION, 1.0, 0.3, 0);
         }
         break;
-      case 6:
+      case 10:
         if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
           HAL_Delay(1000);
           straight(HALF_SECTION, 1.0, 0.3, 0.3);
