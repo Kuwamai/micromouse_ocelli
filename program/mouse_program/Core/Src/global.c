@@ -6,8 +6,17 @@
  */
 #include <global.h>
 
+// 壁閾値 [V]
+const float SENSOR_FL_TH = 0.14;
+const float SENSOR_L_TH = 0.1;
+const float SENSOR_R_TH = 0.1;
+const float SENSOR_FR_TH = 0.15;
+// 壁制御目標値 [V]
+const float SENSOR_L_REF = 0.275;
+const float SENSOR_R_REF = 0.265;
 // 車輪径 [m]
-const float TIRE_DIAMETER = 0.0133;
+const float TIRE_DIAMETER = 0.0134;
+// const float TIRE_DIAMETER = 0.01305; // これがいい感じだけど処理落ちして時間かかってる？
 // 円周率
 const float M_PI = 3.141592;
 
@@ -30,9 +39,9 @@ const float ANGULAR_VELOCITY_KD = 0.0001;
 const float ANGULAR_VELOCITY_MIN = 30.0;
 
 // 壁制御Pゲイン
-const float WALL_CONTROL_KP = 0.01;
+const float WALL_CONTROL_KP = 0.07;
 const float WALL_CONTROL_KI = 0;
-const float WALL_CONTROL_KD = 0;
+const float WALL_CONTROL_KD = 0.01;
 
 // 最大Duty比
 const int DUTY_LIMIT = 200;
@@ -44,14 +53,6 @@ const int TURN_MODE = 2;
 const int LEFT = 1;
 // 右
 const int RIGHT = 2;
-// 壁閾値 [V]
-const float SENSOR_FL_TH = 0.1;
-const float SENSOR_L_TH = 0.12 + 0.05;
-const float SENSOR_R_TH = 0.11 + 0.05;
-const float SENSOR_FR_TH = 0.1;
-// 壁制御目標値 [V]
-const float SENSOR_L_REF = 0.32;
-const float SENSOR_R_REF = 0.25;
 
 // センサ用割り込みカウンタ
 int sensor_count = 0;
@@ -118,3 +119,13 @@ float angular_velocity_err_past = 0;
 float angular_velocity_err_int = 0;
 // 角加速度 [deg/s/s]
 float angular_accel = 0;
+
+// for adachi
+const int MASK_SEARCH = 0x01;
+const float HALF_SECTION = 0.09;    //半区画の距離
+const float SECTION = 0.18;        //一区画の距離
+t_position mypos;
+const int MAZESIZE_X = 16;//迷路の大きさ(MAZESIZE_X * MAZESIZE_Y)迷路
+const int MAZESIZE_Y = 16;//迷路の大きさ(MAZESIZE_X * MAZESIZE_Y)迷路
+t_wall			wall[16][16];		//壁の情報を格納する構造体配列
+unsigned char		map[16][16];		//歩数マップ

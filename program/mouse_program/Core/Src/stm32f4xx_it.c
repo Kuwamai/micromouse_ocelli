@@ -219,13 +219,16 @@ void TIM4_IRQHandler(void)
   float battery_voltage = 0;
   // LEDがオフのときのセンサ値保存用
   float sensor_past_value = 0;
+  float sensor_now_value = 0;
 
   switch(sensor_count) {
     case 0:
       sensor_past_value = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
       delay_us(15);
-      sensor_fl.value = (float)adc_raw[sensor_count] * 3.3 / 4096.0 - sensor_past_value;
+      sensor_now_value = (float)adc_raw[sensor_count] * 3.3 / 4096.0 - sensor_past_value;
+      sensor_fl.value = sensor_now_value * 0.1 + sensor_fl.value_past * 0.9;
+      sensor_fl.value_past = sensor_fl.value;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
 
       sensor_fl.is_wall =  sensor_fl.value > SENSOR_FL_TH;
@@ -235,7 +238,9 @@ void TIM4_IRQHandler(void)
       sensor_past_value = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
       delay_us(15);
-      sensor_l.value = (float)adc_raw[sensor_count] * 3.3 / 4096.0 - sensor_past_value;
+      sensor_now_value = (float)adc_raw[sensor_count] * 3.3 / 4096.0 - sensor_past_value;
+      sensor_l.value = sensor_now_value * 0.1 + sensor_l.value_past * 0.9;
+      sensor_l.value_past = sensor_l.value;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
 
       sensor_l.is_wall =  sensor_l.value > SENSOR_L_TH;
@@ -247,7 +252,9 @@ void TIM4_IRQHandler(void)
       sensor_past_value = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
       delay_us(15);
-      sensor_r.value = (float)adc_raw[sensor_count] * 3.3 / 4096.0 - sensor_past_value;
+      sensor_now_value = (float)adc_raw[sensor_count] * 3.3 / 4096.0 - sensor_past_value;
+      sensor_r.value = sensor_now_value * 0.1 + sensor_r.value_past * 0.9;
+      sensor_r.value_past = sensor_r.value;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
 
       sensor_r.is_wall =  sensor_r.value > SENSOR_R_TH;
@@ -259,7 +266,9 @@ void TIM4_IRQHandler(void)
       sensor_past_value = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
       delay_us(15);
-      sensor_fr.value = (float)adc_raw[sensor_count] * 3.3 / 4096.0 - sensor_past_value;
+      sensor_now_value = (float)adc_raw[sensor_count] * 3.3 / 4096.0 - sensor_past_value;
+      sensor_fr.value = sensor_now_value * 0.1 + sensor_fr.value_past * 0.9;
+      sensor_fr.value_past = sensor_fr.value;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
 
       sensor_fr.is_wall =  sensor_fr.value > SENSOR_FR_TH;
@@ -281,9 +290,6 @@ void TIM4_IRQHandler(void)
           while(1);
         }
       }
-      sensor_count++;
-      break;
-    default:
       sensor_count = 0;
       break;
   }
@@ -307,26 +313,28 @@ void TIM5_IRQHandler(void)
     if (velocity_ref > velocity_ref_max) {
       velocity_ref = velocity_ref_max;
     }
+    if (sensor_fl.value + sensor_fr.value <= (SENSOR_FL_TH + SENSOR_FR_TH) * 3.0 && velocity_ref >= 0.01) {
+      // 壁制御
+      wall_control.error_past = wall_control.error;
 
-    // 壁制御
-    wall_control.error_past = wall_control.error;
+      if (sensor_r.is_wall && sensor_l.is_wall) {
+        // 角速度が左曲がりを正としているので偏差も左を正とする
+        wall_control.error = sensor_l.error - sensor_r.error;
+      } else if (sensor_r.is_wall || sensor_l.is_wall) {
+        wall_control.error = (sensor_l.error - sensor_r.error) * 2.0;
+      } else {
+        wall_control.error = 0;
+      }
 
-    if (sensor_r.is_wall && sensor_l.is_wall) {
-      // 角速度が左曲がりを正としているので偏差も左を正とする
-      wall_control.error = sensor_l.error - sensor_r.error;
-    } else if (sensor_r.is_wall || sensor_l.is_wall) {
-      wall_control.error = (sensor_l.error - sensor_r.error) * 2.0;
+      wall_control.error_int += wall_control.error;
+      if (wall_control.error_int > 100) wall_control.error_int = 100;
+      else if (wall_control.error_int < -100) wall_control.error_int = -100;
+
+      wall_control.error_diff = wall_control.error_past - wall_control.error;
+
+      velocity_ref_diff = wall_control.error * WALL_CONTROL_KP + wall_control.error_int * WALL_CONTROL_KI + wall_control.error_diff * WALL_CONTROL_KD;
     } else {
-      wall_control.error = 0;
     }
-
-    wall_control.error_int += wall_control.error;
-    if (wall_control.error_int > 100) wall_control.error_int = 100;
-    else if (wall_control.error_int < -100) wall_control.error_int = -100;
-
-    wall_control.error_diff = wall_control.error_past - wall_control.error;
-
-    velocity_ref_diff = wall_control.error * WALL_CONTROL_KP + wall_control.error_int * WALL_CONTROL_KI + wall_control.error_diff * WALL_CONTROL_KD;
     velocity_l_ref = velocity_ref - velocity_ref_diff;
     velocity_r_ref = velocity_ref + velocity_ref_diff;
   }
