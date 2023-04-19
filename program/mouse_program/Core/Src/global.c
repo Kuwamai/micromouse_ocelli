@@ -7,15 +7,15 @@
 #include <global.h>
 
 // 壁閾値 [V]
-const float SENSOR_FL_TH = 0.14;
+const float SENSOR_FL_TH = 0.12;
 const float SENSOR_L_TH = 0.1;
 const float SENSOR_R_TH = 0.1;
-const float SENSOR_FR_TH = 0.15;
+const float SENSOR_FR_TH = 0.13;
 // 壁制御目標値 [V]
-const float SENSOR_L_REF = 0.275;
-const float SENSOR_R_REF = 0.265;
+const float SENSOR_L_REF = 0.345;
+const float SENSOR_R_REF = 0.238;
 // 車輪径 [m]
-const float TIRE_DIAMETER = 0.0134;
+const float TIRE_DIAMETER = 0.01309;
 // const float TIRE_DIAMETER = 0.01305; // これがいい感じだけど処理落ちして時間かかってる？
 // 円周率
 const float M_PI = 3.141592;

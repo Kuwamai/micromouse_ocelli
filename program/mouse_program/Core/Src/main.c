@@ -143,7 +143,7 @@ int main(void)
 					angle_measured = 0;
 					mypos.x = mypos.y = 0;			//座標を初期化
 					mypos.dir = north;			//方角を初期化
-          search_adachi(7, 7, 0.3, 1.0, 270.0, 270.0);
+          search_adachi(2, 5, 0.3, 1.0, 270.0, 270.0);
 					//turn(180,TURN_ACCEL,TURN_SPEED,RIGHT);			//ゴールしたら180度回転する
 					// mypos.dir = (mypos.dir+6) % 4;		//方角を更新
 					// map_write();
@@ -205,7 +205,7 @@ int main(void)
       case 6:
         if (HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == 0) {
           HAL_Delay(1000);
-          straight(SECTION * 15.0, 0.3, 1.0, 0);
+          straight(SECTION * 5.0, 0.3, 1.0, 0);
         }
         break;
       case 7:
