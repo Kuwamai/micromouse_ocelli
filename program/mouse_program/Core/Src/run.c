@@ -90,6 +90,7 @@ void straight(float length, float accel_ref, float velocity_max, float velocity_
     accel = 0;
     velocity_ref = 0;
     while (velocity_l >= 0 && velocity_r >= 0);
+    motor_off();
   } else {
     while ((length - length_run) > ((velocity_ref * velocity_ref) - (velocity_end * velocity_end)) / (2.0 * accel_ref));
     accel = -accel_ref;
@@ -100,7 +101,6 @@ void straight(float length, float accel_ref, float velocity_max, float velocity_
     }
     accel = 0;
   }
-  motor_off();
   length_run = 0;
   run_mode = 0;
 }
