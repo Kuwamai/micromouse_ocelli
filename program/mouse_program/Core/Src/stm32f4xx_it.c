@@ -402,10 +402,15 @@ void TIM5_IRQHandler(void)
   encoder_l_past = encoder_l;
   encoder_r_past = encoder_r;
 
-  velocity_l = -((float)encoder_l_diff / 4095.0) * TIRE_DIAMETER * M_PI * 1000.0;
-  velocity_r =  ((float)encoder_r_diff / 4095.0) * TIRE_DIAMETER * M_PI * 1000.0;
+  // 左輪の走行距離 [m]
+  float length_run_l = -((float)encoder_l_diff / 4095.0) * TIRE_DIAMETER * M_PI;
+  // 右輪の走行距離 [m]
+  float length_run_r = ((float)encoder_r_diff / 4095.0) * TIRE_DIAMETER * M_PI;
 
-  length_run += (velocity_l + velocity_r) / 2.0 / 1000.0;
+  length_run += (length_run_l + length_run_r) / 2.0;
+
+  velocity_l = length_run_l * 1000.0;
+  velocity_r = length_run_r * 1000.0;
 
   float velocity_l_err = velocity_l_ref - velocity_l;
   velocity_l_err_int = velocity_l_err_int + velocity_l_err;
