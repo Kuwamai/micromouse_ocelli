@@ -74,7 +74,6 @@ void imu_init(void) {
 }
 
 void straight(float length, float accel_ref, float velocity_max, float velocity_end) {
-  length_run = 0;
   accel = accel_ref;
   run_mode = STRAIGHT_MODE;
   velocity_ref_max = velocity_max;
@@ -142,6 +141,7 @@ void turn(float turn_angle, float angular_accel_ref, float angular_velocity_max,
   motor_off();
   turn_direction = 0;
   run_mode = 0;
+  length_run = 0;
   HAL_Delay(100);
 }
 
@@ -495,6 +495,7 @@ void search_adachi(int gx, int gy, float search_velocity, float search_accel, fl
   t_direction glob_nextdir;					//次に向かう方向を記録する変数
 
   accel=search_accel;
+  length_run = 0;
 
   switch(get_nextdir(gx,gy,MASK_SEARCH,&glob_nextdir))		//次に行く方向を戻り値とする関数を呼ぶ
   {
