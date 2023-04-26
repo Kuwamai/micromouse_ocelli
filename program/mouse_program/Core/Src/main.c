@@ -162,7 +162,7 @@ int main(void)
 					angle_measured = 0;
 					mypos.x = mypos.y = 0;			//座標を初期化
 					mypos.dir = north;			//方角を初期化
-          search_adachi(7, 7, 0.4, 1.2, 270.0, 270.0);
+          search_adachi(0, 5, 0.3, 1.0, 270.0, 270.0);
 					HAL_Delay(100);
         }
         break;
