@@ -52,7 +52,7 @@ float read_angular_velocity(void) {
   imu_spi_data_l = imu_read1byte(0x38);
 
   imu_spi_data = ((int16_t)((uint16_t)imu_spi_data_h<<8)) | ((int16_t)((uint16_t)imu_spi_data_l&0x00ff));
-  float angular_velocity = (float)imu_spi_data / 65.5;
+  float angular_velocity = (float)imu_spi_data / 65.5f;
   return angular_velocity;
 }
 
@@ -68,7 +68,7 @@ void imu_init(void) {
     offset_sum += read_angular_velocity();
     HAL_Delay(5);
   }
-  angular_velocity_offset = offset_sum / 10.0;
+  angular_velocity_offset = offset_sum / 10.0f;
   angular_velocity_err_int = 0;
   angle_measured = 0;
 }
@@ -79,7 +79,7 @@ void straight(float length, float accel_ref, float velocity_max, float velocity_
   velocity_ref_max = velocity_max;
   motor_on();
   if (velocity_end == 0){
-    while ((length - 0.01 - length_run) > (velocity_ref * velocity_ref) / (2.0 * accel_ref));
+    while ((length - 0.01f - length_run) > (velocity_ref * velocity_ref) / (2.0f * accel_ref));
     accel = -accel_ref;
     while (length_run < length) {
       if (velocity_ref <= VELOCITY_MIN) {
@@ -92,7 +92,7 @@ void straight(float length, float accel_ref, float velocity_max, float velocity_
     while (velocity_l >= 0 && velocity_r >= 0);
     motor_off();
   } else {
-    while ((length - length_run) > ((velocity_ref * velocity_ref) - (velocity_end * velocity_end)) / (2.0 * accel_ref));
+    while ((length - length_run) > ((velocity_ref * velocity_ref) - (velocity_end * velocity_end)) / (2.0f * accel_ref));
     accel = -accel_ref;
     while (length_run < length) {
       if (velocity_ref <= velocity_end) {
@@ -115,7 +115,7 @@ void turn(float turn_angle, float angular_accel_ref, float angular_velocity_max,
   if (direction == LEFT) {
     angular_accel = angular_accel_ref;
     angular_velocity_ref_max = angular_velocity_max;
-    while ((turn_angle - angle_measured) > (angular_velocity_ref * angular_velocity_ref) / (2.0 * angular_accel_ref));
+    while ((turn_angle - angle_measured) > (angular_velocity_ref * angular_velocity_ref) / (2.0f * angular_accel_ref));
     angular_accel = -angular_accel_ref;
     while (angle_measured < turn_angle) {
       if (angular_velocity_ref <= ANGULAR_VELOCITY_MIN) {
@@ -126,7 +126,7 @@ void turn(float turn_angle, float angular_accel_ref, float angular_velocity_max,
   } else if (direction == RIGHT) {
     angular_accel = -angular_accel_ref;
     angular_velocity_ref_max = -angular_velocity_max;
-    while ((-turn_angle - angle_measured) < (angular_velocity_ref * angular_velocity_ref) / (2.0 * -angular_accel_ref));
+    while ((-turn_angle - angle_measured) < (angular_velocity_ref * angular_velocity_ref) / (2.0f * -angular_accel_ref));
     angular_accel = angular_accel_ref;
     while (angle_measured > -turn_angle) {
       if (angular_velocity_ref >= -ANGULAR_VELOCITY_MIN) {
@@ -137,7 +137,7 @@ void turn(float turn_angle, float angular_accel_ref, float angular_velocity_max,
   }
   angular_accel = 0;
   angular_velocity_ref = 0;
-  while (angular_velocity >= 1.0 || angular_velocity <= -1.0);
+  while (angular_velocity >= 1.0f || angular_velocity <= -1.0f);
   motor_off();
   turn_direction = 0;
   run_mode = 0;

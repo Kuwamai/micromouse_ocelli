@@ -223,11 +223,11 @@ void TIM4_IRQHandler(void)
 
   switch(sensor_count) {
     case 0:
-      sensor_past_value = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
+      sensor_past_value = (float)adc_raw[sensor_count] * 3.3f / 4096.0f;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
       delay_us(15);
-      sensor_now_value = (float)adc_raw[sensor_count] * 3.3 / 4096.0 - sensor_past_value;
-      sensor_fl.value = sensor_now_value * 0.1 + sensor_fl.value_past * 0.9;
+      sensor_now_value = (float)adc_raw[sensor_count] * 3.3f / 4096.0f - sensor_past_value;
+      sensor_fl.value = sensor_now_value * 0.1f + sensor_fl.value_past * 0.9f;
       sensor_fl.value_past = sensor_fl.value;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
 
@@ -235,11 +235,11 @@ void TIM4_IRQHandler(void)
       sensor_count++;
       break;
     case 1:
-      sensor_past_value = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
+      sensor_past_value = (float)adc_raw[sensor_count] * 3.3f / 4096.0f;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
       delay_us(15);
-      sensor_now_value = (float)adc_raw[sensor_count] * 3.3 / 4096.0 - sensor_past_value;
-      sensor_l.value = sensor_now_value * 0.1 + sensor_l.value_past * 0.9;
+      sensor_now_value = (float)adc_raw[sensor_count] * 3.3f / 4096.0f - sensor_past_value;
+      sensor_l.value = sensor_now_value * 0.1f + sensor_l.value_past * 0.9f;
       sensor_l.value_past = sensor_l.value;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
 
@@ -249,11 +249,11 @@ void TIM4_IRQHandler(void)
       sensor_count++;
       break;
     case 2:
-      sensor_past_value = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
+      sensor_past_value = (float)adc_raw[sensor_count] * 3.3f / 4096.0f;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
       delay_us(15);
-      sensor_now_value = (float)adc_raw[sensor_count] * 3.3 / 4096.0 - sensor_past_value;
-      sensor_r.value = sensor_now_value * 0.1 + sensor_r.value_past * 0.9;
+      sensor_now_value = (float)adc_raw[sensor_count] * 3.3f / 4096.0f - sensor_past_value;
+      sensor_r.value = sensor_now_value * 0.1f + sensor_r.value_past * 0.9f;
       sensor_r.value_past = sensor_r.value;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
 
@@ -263,11 +263,11 @@ void TIM4_IRQHandler(void)
       sensor_count++;
       break;
     case 3:
-      sensor_past_value = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
+      sensor_past_value = (float)adc_raw[sensor_count] * 3.3f / 4096.0f;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_SET);
       delay_us(15);
-      sensor_now_value = (float)adc_raw[sensor_count] * 3.3 / 4096.0 - sensor_past_value;
-      sensor_fr.value = sensor_now_value * 0.1 + sensor_fr.value_past * 0.9;
+      sensor_now_value = (float)adc_raw[sensor_count] * 3.3f / 4096.0f - sensor_past_value;
+      sensor_fr.value = sensor_now_value * 0.1 + sensor_fr.value_past * 0.9f;
       sensor_fr.value_past = sensor_fr.value;
       HAL_GPIO_WritePin(ports[sensor_count], pins[sensor_count], GPIO_PIN_RESET);
 
@@ -275,16 +275,16 @@ void TIM4_IRQHandler(void)
       sensor_count++;
       break;
     case 4:
-      battery_voltage = (float)adc_raw[sensor_count] * 3.3 / 4096.0;
-      battery_voltage = battery_voltage / 2.0 * 3.0 * adjust_volt;
-      if (battery_voltage < 3.6) {
+      battery_voltage = (float)adc_raw[sensor_count] * 3.3f / 4096.0f;
+      battery_voltage = battery_voltage / 2.0f * 3.0f * adjust_volt;
+      if (battery_voltage < 3.6f) {
         battery_alert_count++;
         if (battery_alert_count > 100) led_control(0xF);
         if (battery_alert_count > 200) {
           led_control(0);
           battery_alert_count = 0;
         }
-        if (battery_voltage < 3.5) {
+        if (battery_voltage < 3.5f) {
           led_control(0xF);
           motor_off();
           while(1);
@@ -309,11 +309,11 @@ void TIM5_IRQHandler(void)
   /* USER CODE BEGIN TIM5_IRQn 0 */
   float velocity_ref_diff = 0;
   if (run_mode == STRAIGHT_MODE) {
-    velocity_ref += accel / 1000.0;
+    velocity_ref += accel / 1000.0f;
     if (velocity_ref > velocity_ref_max) {
       velocity_ref = velocity_ref_max;
     }
-    if (sensor_fl.value + sensor_fr.value <= (SENSOR_FL_TH + SENSOR_FR_TH) * 3.0 && velocity_ref >= 0.01) {
+    if (sensor_fl.value + sensor_fr.value <= (SENSOR_FL_TH + SENSOR_FR_TH) * 3.0f && velocity_ref >= 0.01f) {
       // 壁制御
       wall_control.error_past = wall_control.error;
 
@@ -321,14 +321,14 @@ void TIM5_IRQHandler(void)
         // 角速度が左曲がりを正としているので偏差も左を正とする
         wall_control.error = sensor_l.error - sensor_r.error;
       } else if (sensor_r.is_wall || sensor_l.is_wall) {
-        wall_control.error = (sensor_l.error - sensor_r.error) * 2.0;
+        wall_control.error = (sensor_l.error - sensor_r.error) * 2.0f;
       } else {
         wall_control.error = 0;
       }
 
       wall_control.error_int += wall_control.error;
-      if (wall_control.error_int > 100) wall_control.error_int = 100;
-      else if (wall_control.error_int < -100) wall_control.error_int = -100;
+      if (wall_control.error_int > 100.0f) wall_control.error_int = 100.0f;
+      else if (wall_control.error_int < -100.0f) wall_control.error_int = -100.0f;
 
       wall_control.error_diff = wall_control.error_past - wall_control.error;
 
@@ -340,7 +340,7 @@ void TIM5_IRQHandler(void)
   }
   // 角速度制御
   if (run_mode == TURN_MODE) {
-    angular_velocity_ref += angular_accel / 1000.0;
+    angular_velocity_ref += angular_accel / 1000.0f;
     if (turn_direction == LEFT) {
       if (angular_velocity_ref > angular_velocity_ref_max) {
         angular_velocity_ref = angular_velocity_ref_max;
@@ -351,12 +351,12 @@ void TIM5_IRQHandler(void)
       }
     }
     angular_velocity = read_angular_velocity() - angular_velocity_offset;
-    angle_measured += angular_velocity / 1000.0;
+    angle_measured += angular_velocity / 1000.0f;
 
     float angular_velocity_err = angular_velocity_ref - angular_velocity;
     angular_velocity_err_int = angular_velocity_err_int + angular_velocity_err;
-    if (angular_velocity_err_int >  1000) angular_velocity_err_int =  1000;
-    if (angular_velocity_err_int < -1000) angular_velocity_err_int = -1000;
+    if (angular_velocity_err_int >  1000.0f) angular_velocity_err_int =  1000.0f;
+    if (angular_velocity_err_int < -1000.0f) angular_velocity_err_int = -1000.0f;
     float angular_velocity_err_diff = angular_velocity_err_past - angular_velocity_err;
     angular_velocity_err_past = angular_velocity_err;
     // 目標速度差 [m/s]
@@ -403,27 +403,27 @@ void TIM5_IRQHandler(void)
   encoder_r_past = encoder_r;
 
   // 左輪の走行距離 [m]
-  float length_run_l = -((float)encoder_l_diff / 4095.0) * TIRE_DIAMETER * M_PI;
+  float length_run_l = -((float)encoder_l_diff / 4095.0f) * TIRE_DIAMETER * M_PI;
   // 右輪の走行距離 [m]
-  float length_run_r = ((float)encoder_r_diff / 4095.0) * TIRE_DIAMETER * M_PI;
+  float length_run_r = ((float)encoder_r_diff / 4095.0f) * TIRE_DIAMETER * M_PI;
 
-  length_run += (length_run_l + length_run_r) / 2.0;
+  length_run += (length_run_l + length_run_r) / 2.0f;
 
-  velocity_l = length_run_l * 1000.0;
-  velocity_r = length_run_r * 1000.0;
+  velocity_l = length_run_l * 1000.0f;
+  velocity_r = length_run_r * 1000.0f;
 
   float velocity_l_err = velocity_l_ref - velocity_l;
   velocity_l_err_int = velocity_l_err_int + velocity_l_err;
-  if (velocity_l_err_int >  100) velocity_l_err_int =  100;
-  if (velocity_l_err_int < -100) velocity_l_err_int = -100;
+  if (velocity_l_err_int >  100.0f) velocity_l_err_int =  100.0f;
+  if (velocity_l_err_int < -100.0f) velocity_l_err_int = -100.0f;
   float velocity_l_err_diff = velocity_l_err_past - velocity_l_err;
   velocity_l_err_past = velocity_l_err;
   int duty_l = (int)(velocity_l_err * VELOCITY_KP + velocity_l_err_int * VELOCITY_KI + velocity_l_err_diff * VELOCITY_KD);
 
   float velocity_r_err = velocity_r_ref - velocity_r;
   velocity_r_err_int = velocity_r_err_int + velocity_r_err;
-  if (velocity_r_err_int >  100) velocity_r_err_int =  100;
-  if (velocity_r_err_int < -100) velocity_r_err_int = -100;
+  if (velocity_r_err_int >  100.0f) velocity_r_err_int =  100.0f;
+  if (velocity_r_err_int < -100.0f) velocity_r_err_int = -100.0f;
   float velocity_r_err_diff = velocity_r_err_past - velocity_r_err;
   velocity_r_err_past = velocity_r_err;
   int duty_r = (int)(velocity_r_err * VELOCITY_KP + velocity_r_err_int * VELOCITY_KI + velocity_r_err_diff * VELOCITY_KD);
