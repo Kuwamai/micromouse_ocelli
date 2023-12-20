@@ -125,7 +125,5 @@ const int MASK_SEARCH = 0x01;
 const float HALF_SECTION = 0.09;    //半区画の距離
 const float SECTION = 0.18;        //一区画の距離
 t_position mypos;
-const int MAZESIZE_X = 16;//迷路の大きさ(MAZESIZE_X * MAZESIZE_Y)迷路
-const int MAZESIZE_Y = 16;//迷路の大きさ(MAZESIZE_X * MAZESIZE_Y)迷路
 t_wall			wall[16][16];		//壁の情報を格納する構造体配列
 unsigned char		map[16][16];		//歩数マップ

@@ -78,10 +78,10 @@ extern const int MASK_SEARCH;
 extern const float HALF_SECTION;    //半区画の距離
 extern const float SECTION;        //一区画の距離
 extern t_position mypos;
-extern const int MAZESIZE_X;//迷路の大きさ(MAZESIZE_X * MAZESIZE_Y)迷路
-extern const int MAZESIZE_Y;//迷路の大きさ(MAZESIZE_X * MAZESIZE_Y)迷路
-extern t_wall			wall[16][16];		//壁の情報を格納する構造体配列
-extern unsigned char		map[16][16];		//歩数マップ
+#define MAZESIZE_X 16 //迷路の大きさ(MAZESIZE_X * MAZESIZE_Y)迷路
+#define MAZESIZE_Y 16 //迷路の大きさ(MAZESIZE_X * MAZESIZE_Y)迷路
+extern t_wall			wall[MAZESIZE_X][MAZESIZE_Y];		//壁の情報を格納する構造体配列
+extern unsigned char		map[MAZESIZE_X][MAZESIZE_Y];		//歩数マップ
 #define UNKNOWN	2				//壁があるかないか判らない状態の場合の値
 #define NOWALL	0				//壁がないばあいの値
 #define WALL	1				//壁がある場合の値
